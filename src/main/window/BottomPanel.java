@@ -9,15 +9,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class BottomPanel extends JPanel implements ActionListener {
     // Component
     private JTextField pathToMods;
+    private String separator;
 
     BottomPanel() {
         super();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+
+        String separator;
+        if (System.getProperty("os.name").contains("Windows")) {
+            separator = "\\";
+        } else {
+            separator="/";
+        }
 
         JLabel pathToModsLabel = new JLabel("Chemin du dossier des mods");
         c.fill = GridBagConstraints.BOTH;
@@ -29,9 +40,9 @@ public class BottomPanel extends JPanel implements ActionListener {
 
         String path="";
         if (System.getProperty("os.name").contains("Windows")) {
-            path = "/AppData/Roaming";
+            path = "\\AppData\\Roaming";
         }
-        pathToMods = new JTextField(System.getProperty("user.home") + path +"/.minecraft/mods/");
+        pathToMods = new JTextField(System.getProperty("user.home") + path + separator +".minecraft" + separator + "mods" + separator);
 
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth=5;
@@ -80,11 +91,17 @@ public class BottomPanel extends JPanel implements ActionListener {
                 pathToMods.setText(fc.getSelectedFile().getAbsolutePath());
         }
         else if (actionEvent.getActionCommand().equals("update")) {
+                // cleaning folder
+            for (File f : new File(pathToMods.getText()).listFiles()) {
+                f.delete();
+            }
                 // update mods
             String move;
             if (System.getProperty("os.name").contains("Windows")) {
                 move="move ";
-            } else { move="mv "; }
+            } else {
+                move="mv ";
+            }
             String path = pathToMods.getText();
             try {
                 // downloading mod list
@@ -104,12 +121,14 @@ public class BottomPanel extends JPanel implements ActionListener {
                     ReadableByteChannel rbc = Channels.newChannel(file.openStream());
                     FileOutputStream fos = new FileOutputStream(name);
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                    this.execute(move + name + " " + pathToMods.getText() + "/");
+                    //this.execute(move + name + " " + pathToMods.getText() + separator);
+                    Files.copy(Paths.get(name),Paths.get(pathToMods.getText()+name), StandardCopyOption.REPLACE_EXISTING);
+                    new File(name).delete();
                     // next mod
                     line = br.readLine();
                 }
                 // rm mod list
-                this.execute("rm mods.txt");
+                new File("mods.txt").delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -117,15 +136,5 @@ public class BottomPanel extends JPanel implements ActionListener {
 
         // unlocks
         pathToMods.setEnabled(true);
-    }
-
-    static void execute(String cmd) {
-        Runtime rt = Runtime.getRuntime();
-        try {
-            Process pr = rt.exec(cmd);
-        } catch (IOException e) {
-            // Alert
-            e.printStackTrace();
-        }
     }
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,8 +49,8 @@ public class TopPanel extends JPanel {
             webPage.setPage("file:changelog.html");
 
             // rm files
-            BottomPanel.execute("rm changelog.html");
-            BottomPanel.execute("rm stylesheet.css");
+            new File("changelog.html").delete();
+            new File("stylesheet.css").delete();
         }catch (IOException e) {
             webPage.setContentType("text/html");
             webPage.setText("<html><h1>Erreur</h1>Impossible d'ouvrir le fichier.</html>");
