@@ -5,7 +5,7 @@
 * [Introduction](#introduction)
 * [License](#license)
 * [Utilisation](#utilisation)
-* [Téléchargements](#téléchargements)
+* [Téléchargement](#téléchargement)
 * [Problèmes](#problèmes)
 * [Auteur](auteur)
 
@@ -16,13 +16,13 @@ Elle contient le *changelog*, et permet de mettre à jour automatiquement son cl
 
 ## License
 
-Voir (LICENSE)[https://github.com/Chocorean/ClientMinecraftTNCY/blob/master/LICENSE].
+Voir [LICENSE](https://github.com/Chocorean/ClientMinecraftTNCY/blob/master/LICENSE).
 
 ## Utilisation
 
-Incoming.
+Exécuter l'application avec `java -jar Updater.jar`. Renseigner le chemin de destination où enregistrer les mods (le contenu du dossier sera nettoyé avant téléchargement), et mettre à jour.
 
-## Téléchargements
+## Téléchargement
 
 Incoming.
 
