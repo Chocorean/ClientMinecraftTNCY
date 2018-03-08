@@ -2,11 +2,11 @@
 
 ## Sommaire
 
-* (Introduction)[#introduction]
-* (License)[#license]
-* (Utilisation)[#utilisation]
-* (Téléchargements)[#téléchargements]
-* (Problèmes)[#problèmes]
+* [Introduction](#introduction)
+* [License](#license)
+* [Utilisation](#utilisation)
+* [Téléchargements](#téléchargements)
+* [Problèmes](#problèmes)
 
 ## Introduction
 
