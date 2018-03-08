@@ -136,5 +136,7 @@ public class BottomPanel extends JPanel implements ActionListener {
 
         // unlocks
         pathToMods.setEnabled(true);
+
+        JOptionPane.showMessageDialog(this, "Mise à jour réussie.");
     }
 }
