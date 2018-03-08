@@ -7,6 +7,7 @@
 * [Utilisation](#utilisation)
 * [Téléchargements](#téléchargements)
 * [Problèmes](#problèmes)
+* [Auteur](auteur)
 
 ## Introduction
 
@@ -28,5 +29,7 @@ Incoming.
 ## Problèmes
 
 Si vous rencontrez des problèmes quant à l'utilisation de cet *updater*, merci de bien vouloir créer une *Issue* dans la section dédiée.
+
+## Auteur
 
 Baptiste Chocot ([@Chocorean](https://github.com/Chocorean/))
