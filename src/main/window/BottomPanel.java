@@ -43,9 +43,19 @@ public class BottomPanel extends JPanel implements ActionListener {
         lookForModsPath.setActionCommand("mod_path");
         lookForModsPath.addActionListener(this);
         c.fill = GridBagConstraints.BOTH;
+        c.insets = new Insets(0,0,0,10);
         c.gridx=5;
         c.gridy=1;
         this.add(lookForModsPath,c);
+
+        JLabel warningLabel = new JLabel("Attention! Le contenu du dossier sera supprimé.");
+    warningLabel.setForeground(Color.red);
+        c.fill = GridBagConstraints.BOTH;
+        c.insets = new Insets(0,10,0,10);
+        c.gridx=0;
+        c.gridy=2;
+        this.add(warningLabel,c);
+        c.insets = new Insets(0,10,0,10);
 
         JButton runButton = new JButton("Mettre à jour");
         runButton.setActionCommand("update");
@@ -77,6 +87,13 @@ public class BottomPanel extends JPanel implements ActionListener {
             } else { move="mv "; }
             String path = pathToMods.getText();
             try {
+                // downloading mod list
+                URL mod_file = new URL("https://raw.githubusercontent.com/Chocorean/ClientMinecraftTNCY/master/src/resource/mods.txt");
+                ReadableByteChannel mod_rbc = Channels.newChannel(mod_file.openStream());
+                FileOutputStream mod_fos = new FileOutputStream("mods.txt");
+                mod_fos.getChannel().transferFrom(mod_rbc, 0, Long.MAX_VALUE);
+
+                // reading file
                 BufferedReader br = new BufferedReader(new FileReader("mods.txt"));
                 String line = br.readLine();
                 while (line != null) {
@@ -91,6 +108,8 @@ public class BottomPanel extends JPanel implements ActionListener {
                     // next mod
                     line = br.readLine();
                 }
+                // rm mod list
+                this.execute("rm mods.txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }
