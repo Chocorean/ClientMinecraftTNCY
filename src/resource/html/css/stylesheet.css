@@ -1,0 +1,27 @@
+body{
+  background-color: gray;
+  font-family: "Calibri";
+}
+
+h1{
+  color: white;
+  text-decoration: underline;
+}
+
+h2{
+  color: orange;
+  text-decoration: underline;
+}
+
+h3{
+  color: purple;
+  text-decoration: underline;
+}
+
+.mod{
+  color: blue;
+}
+
+.mod:hover{
+  color: orange;
+}
