@@ -1,3 +1,5 @@
+package main;
+
 import main.window.MyWindow;
 
 public class Main {
