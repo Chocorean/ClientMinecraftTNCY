@@ -1,6 +1,7 @@
 package main.window;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MyWindow extends JFrame {
     // Component list

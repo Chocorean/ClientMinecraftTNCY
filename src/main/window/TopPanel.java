@@ -1,8 +1,12 @@
 package main.window;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import java.awt.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -16,6 +20,17 @@ public class TopPanel extends JPanel {
         super();
         webPage = new JEditorPane();
         webPage.setEditable(false);
+        webPage.addHyperlinkListener(new HyperlinkListener(){
+            public void hyperlinkUpdate(HyperlinkEvent e){
+                if (e.getEventType() == (HyperlinkEvent.EventType.ACTIVATED)) {
+                    try{
+                        Desktop.getDesktop().browse(e.getURL().toURI());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
 
 
@@ -41,6 +56,10 @@ public class TopPanel extends JPanel {
         }
 
         webContainer = new JScrollPane(webPage);
+        webContainer.setPreferredSize(new Dimension(800,400));
         this.add(webContainer);
+        this.add(new JLabel(" ")); // bottom space
+
+
     }
 }
