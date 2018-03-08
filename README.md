@@ -29,4 +29,4 @@ Incoming.
 
 Si vous rencontrez des problèmes quant à l'utilisation de cet *updater*, merci de bien vouloir créer une *Issue* dans la section dédiée.
 
-Baptiste Chocot ((@Chocorean)[https://github.com/Chocorean/])
+Baptiste Chocot ([@Chocorean](https://github.com/Chocorean/))
