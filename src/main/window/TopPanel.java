@@ -14,7 +14,7 @@ public class TopPanel extends JPanel {
         webPage.setEditable(false);
 
         try {
-            webPage.setPage("file:html/changelog.html");
+            webPage.setPage("file:src/resource/html/changelog.html");
         }catch (IOException e) {
             webPage.setContentType("text/html");
             webPage.setText("<html><h1>Erreur</h1>Impossible d'ouvrir le fichier.</html>");

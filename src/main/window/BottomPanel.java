@@ -4,12 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class BottomPanel extends JPanel implements ActionListener {
-    // Components
+    // Component
     private JTextField pathToMods;
-    private JTextField pathToApp;
 
     BottomPanel() {
         super();
@@ -24,7 +27,12 @@ public class BottomPanel extends JPanel implements ActionListener {
         this.add(pathToModsLabel,c);
         c.insets = new Insets(0,10,0,10);
 
-        pathToMods = new JTextField(System.getProperty("user.home") + "/.minecraft/mods/");
+        String path="";
+        if (System.getProperty("os.name").contains("Windows")) {
+            path = "/AppData/Roaming";
+        }
+        pathToMods = new JTextField(System.getProperty("user.home") + path +"/.minecraft/mods/");
+
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth=5;
         c.gridx=0;
@@ -39,30 +47,6 @@ public class BottomPanel extends JPanel implements ActionListener {
         c.gridy=1;
         this.add(lookForModsPath,c);
 
-        JLabel pathToAppLabel = new JLabel("Chemin de l'exécutable à lancer");
-        c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets(10,10,0,10);
-        c.gridx=0;
-        c.gridy=2;
-        this.add(pathToAppLabel,c);
-        c.insets = new Insets(0, 10, 0, 10);
-
-        pathToApp = new JTextField();
-        pathToApp.setToolTipText("Laisser vide pour ne rien exécuter après la mise à jour.");
-        c.fill = GridBagConstraints.BOTH;
-        c.gridwidth = 5;
-        c.gridx=0;
-        c.gridy=3;
-        this.add(pathToApp,c);
-
-        JButton lookForExePath = new JButton("...");
-        lookForExePath.setActionCommand("exe_path");
-        lookForExePath.addActionListener(this);
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx=5;
-        c.gridy=3;
-        this.add(lookForExePath,c);
-
         JButton runButton = new JButton("Mettre à jour");
         runButton.setActionCommand("update");
         runButton.addActionListener(this);
@@ -76,26 +60,43 @@ public class BottomPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        pathToApp.setEnabled(false);
+            // locks fields while processing
         pathToMods.setEnabled(false);
 
         if (actionEvent.getActionCommand().equals("mod_path")) {
-            // open browser
-        } else if (actionEvent.getActionCommand().equals("exe_path")) {
-            // open browser
-        } else if (actionEvent.getActionCommand().equals("update")){
-            // update mods
-
-            // run exe
-            if (pathToApp.getText().contains(".exe")) {
-                this.execute(pathToApp.getText());
-            } else if (pathToApp.getText().contains(".jar")) {
-                this.execute("java -jar "+pathToApp.getText());
-            } else {
-                // Alert : cannot run specified file
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+                pathToMods.setText(fc.getSelectedFile().getAbsolutePath());
+        }
+        else if (actionEvent.getActionCommand().equals("update")) {
+                // update mods
+            String move;
+            if (System.getProperty("os.name").contains("Windows")) {
+                move="move ";
+            } else { move="mv "; }
+            String path = pathToMods.getText();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader("mods.txt"));
+                String line = br.readLine();
+                while (line != null) {
+                    // extract mod name
+                    String name = line.split("/")[line.split("/").length-1];
+                    // download mod
+                    URL file = new URL(line);
+                    ReadableByteChannel rbc = Channels.newChannel(file.openStream());
+                    FileOutputStream fos = new FileOutputStream(name);
+                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    this.execute(move + name + " " + pathToMods.getText() + "/");
+                    // next mod
+                    line = br.readLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        pathToApp.setEnabled(true);
+
+        // unlocks
         pathToMods.setEnabled(true);
     }
 
