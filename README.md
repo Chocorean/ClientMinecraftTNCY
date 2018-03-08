@@ -24,7 +24,7 @@ Exécuter l'application avec `java -jar Updater.jar`. Renseigner le chemin de de
 
 ## Téléchargement
 
-Incoming.
+Rendez-vous [ici](https://gitlab.com/telecomnancy.net/public/wikis/Serveur-minecraft) pour le téléchargement et quelques informations supplémentaires.
 
 ## Problèmes
 
