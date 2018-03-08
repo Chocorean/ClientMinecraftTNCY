@@ -119,7 +119,7 @@ public class BottomPanel extends JPanel implements ActionListener {
         pathToMods.setEnabled(true);
     }
 
-    private void execute(String cmd) {
+    static void execute(String cmd) {
         Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(cmd);
