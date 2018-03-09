@@ -25,7 +25,10 @@ public class AppController {
     @FXML private BorderPane bottom;
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
-    @FXML private Button updateButton;
+    @FXML private Button updateModsButton;
+    @FXML private Button installForgeButton;
+    @FXML private Label message;
+    @FXML private ProgressBar progression;
     @FXML private Label version;
     private File modsPath;
     private Stage dialog;
@@ -33,6 +36,7 @@ public class AppController {
 
     @FXML
     private void initialize() {
+        this.resetProgression();
         Configuration conf = Configuration.getInstance();
         this.version.setText(conf.getVersion());
         File modsDirectory = new File(System.getProperty("user.home") + File.separator + MODS_DIR);
@@ -46,13 +50,12 @@ public class AppController {
             if(newPath != null)
                 this.updateModsDirectory(newPath);
         });
-        this.updateButton.setOnMouseReleased(event -> {
-            List<File> installed = ModsUpdater.update(this.modsPath);
+        this.updateModsButton.setOnMouseReleased(event -> {
+            List<File> installed = ModsUpdater.update(this.modsPath, progression);
             this.checkUnusedMods(installed);
-            Label l = new Label(installed.size() + " mods have been updated !");
-            l.getStyleClass().add("success");
-            this.bottom.setCenter(l);
+            this.message.setText(installed.size() + " mods have been updated !");
         });
+        this.installForgeButton.setOnMouseReleased(event -> ForgeInstaller.install(conf.getForgeUrl(), progression));
     }
 
     private void checkUnusedMods(List<File> installedMods) {
@@ -84,6 +87,14 @@ public class AppController {
     public void closeDialog() {
         if(this.dialog != null)
             this.dialog.close();
+    }
+
+    public void resetProgression() {
+        this.progression.setProgress(0);
+    }
+
+    public ProgressBar getProgressBar() {
+        return this.progression;
     }
 
 }

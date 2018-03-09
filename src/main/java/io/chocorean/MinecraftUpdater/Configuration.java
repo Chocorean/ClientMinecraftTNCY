@@ -2,33 +2,37 @@ package io.chocorean.MinecraftUpdater;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 public class Configuration {
 
     private static final String UPDATER_CONFIG_FILE = "/updater.properties";
-    private String mods;
-    private String changelog;
-    private String styles;
-    private String version;
+    private final URL forge;
+    private final URL mods;
+    private final URL changelog;
+    private final URL styles;
+    private final String version;
     private static Configuration config;
 
-    private Configuration(String root, String mods, String changelog, String styles, String version) {
-        this.mods = root + "/" + mods;
-        this.changelog = root + "/" + changelog;
-        this.styles = root + "/" + styles;
+    private Configuration(String root, String mods, String changelog, String styles, String version, String forge) throws MalformedURLException {
+        this.mods = new URL(root + "/" + mods);
+        this.changelog = new URL(root + "/" + changelog);
+        this.styles = new URL(root + "/" + styles);
+        this.forge = new URL(forge);
         this.version = version;
     }
 
-    public String getChangelogUrl() {
+    public URL getChangelogUrl() {
         return this.changelog;
     }
 
-    public String getModsUrl() {
+    public URL getModsUrl() {
         return this.mods;
     }
 
-    public String getStylesUrl() {
+    public URL getStylesUrl() {
         return this.styles;
     }
 
@@ -43,7 +47,8 @@ public class Configuration {
                     prop.getProperty("MODS_FILE"),
                     prop.getProperty("CHANGELOG_FILE"),
                     prop.getProperty("CSS_FILE"),
-                    prop.getProperty("VERSION")
+                    prop.getProperty("VERSION"),
+                    prop.getProperty("FORGE_URL")
             );
         } catch (IOException e) { e.printStackTrace(); }
         return null;
@@ -67,5 +72,9 @@ public class Configuration {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public URL getForgeUrl() {
+        return this.forge;
     }
 }

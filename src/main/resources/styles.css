@@ -75,3 +75,22 @@ scroll-pane > .viewport {
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
+
+.progress-bar {
+    -fx-max-height: 2px;
+    -fx-pref-height: 2px;
+    -fx-min-height: 5px;
+}
+
+.progress-bar .track {
+    -fx-background-color: rgb(10,10,10);
+    -fx-background-radius: 0;
+    -fx-max-height: 2px;
+}
+
+.progress-bar > .bar {
+    -fx-max-height: 1px;
+    -fx-border-insets: 0;
+    -fx-background-insets: 1 0 1 0;
+    -fx-background-color: green;
+}
