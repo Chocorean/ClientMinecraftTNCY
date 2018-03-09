@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.MinecraftUpdater.AppController">
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.MinecraftUpdater.AppController">
    <children>
-      <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <BorderPane id="footer" maxHeight="150.0" prefHeight="150.0" prefWidth="200.0" stylesheets="@../styles.css" BorderPane.alignment="CENTER">
                <center>
@@ -20,20 +20,26 @@
                         <Label text="Chemin du dossier contenant les mods:" textFill="WHITE" />
                         <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
                            <children>
-                              <TextField fx:id="modsDirectory" minWidth="300.0" />
+                              <TextField fx:id="modsDirectory" editable="false" minWidth="300.0" />
                               <Button fx:id="changeModsLocation" mnemonicParsing="false" text="Change" />
                            </children>
                         </HBox>
                      </children>
+                     <BorderPane.margin>
+                        <Insets top="10.0" />
+                     </BorderPane.margin>
                   </VBox>
                </center>
                <bottom>
-                  <BorderPane BorderPane.alignment="CENTER">
+                  <BorderPane fx:id="bottom" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="20.0" />
                      </BorderPane.margin>
                      <center>
-                        <Button id="updateButton" fx:id="updateButton" mnemonicParsing="false" stylesheets="@../styles.css" text="Update" textFill="WHITE" />
+                        <Button fx:id="updateButton" mnemonicParsing="false" styleClass="minecraft-button" stylesheets="@../styles.css" text="Update" textFill="WHITE">
+                           <BorderPane.margin>
+                              <Insets top="10.0" />
+                           </BorderPane.margin></Button>
                      </center>
                      <bottom>
                         <Label fx:id="version" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="version" stylesheets="@../styles.css" text="Label" textAlignment="CENTER" BorderPane.alignment="BOTTOM_RIGHT">
@@ -44,6 +50,9 @@
                      </bottom>
                   </BorderPane>
                </bottom>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </BorderPane>
          </bottom>
          <center>

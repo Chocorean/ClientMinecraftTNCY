@@ -17,6 +17,7 @@ public class Configuration {
         this.mods = root + "/" + mods;
         this.changelog = root + "/" + changelog;
         this.styles = root + "/" + styles;
+        this.version = version;
     }
 
     public String getChangelogUrl() {
@@ -62,5 +63,9 @@ public class Configuration {
         if(Configuration.config == null)
             Configuration.config = loadFromFileProperties();
         return Configuration.config;
+    }
+
+    public String getVersion() {
+        return this.version;
     }
 }

@@ -8,13 +8,10 @@
     -fx-background-image: url("images/background.png");
 }
 
-#updateButton {
+.minecraft-button {
     -fx-background-image: url('http://charliecowan.co.uk/mcbuttongenerator/button_center.png');
     -fx-background-repeat: repeat;
-    -fx-color-label-visible: white;
     -fx-min-height: 40px;
-    -fx-min-width: 400px;
-    -fx-max-width: 400px;
     -fx-font-family: "Minecraft";
     -fx-font-size: 16px;
     -fx-text-fill: white;
@@ -25,22 +22,56 @@
     -fx-cursor: hand;
 }
 
-#updateButton:hover {
+.minecraft-button:hover {
     -fx-background-image: url('http://charliecowan.co.uk/mcbuttongenerator/button_active_center.png');
     -fx-border-color: #BDC6FF #59639A #59639A #BDC6FF;
     -fx-text-fill: #FFFFA0;
 }
 
-#updateButton:pressed {
+.minecraft-button:pressed {
     -fx-border-width: 1 1 2 1;
 }
 
-#updateButton Text {
-    -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
+.minecraft-button Text {
+    -fx-text-fill: red;
+    /*-fx-effect: dropshadow( one-pass-box , black , 8 , 5 , 2 , 5 );*/
 }
 
 .version {
     -fx-font-family: "Minecraft";
     -fx-text-fill: white;
     -fx-font-size: 12px;
+}
+
+.minecraft {
+    -fx-background-color: black;
+    -fx-background-image: url("images/background.png");
+}
+
+.minecraft Label {
+    -fx-font-family: "Minecraft";
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+.transparent {
+    -fx-background: transparent;
+}
+
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-border-width: 2 0 0 0;
+    -fx-border-color: #AAA transparent transparent transparent;
+}
+
+scroll-pane > .viewport {
+   -fx-background-color: red;
+}
+
+.success {
+    -fx-min-height: 50px;
+    -fx-font-family: "Minecraft";
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
