@@ -33,7 +33,7 @@
                         <Insets bottom="20.0" />
                      </BorderPane.margin>
                      <center>
-                        <Button id="updateButton" mnemonicParsing="false" stylesheets="@../styles.css" text="Update" textFill="WHITE" />
+                        <Button id="updateButton" fx:id="updateButton" mnemonicParsing="false" stylesheets="@../styles.css" text="Update" textFill="WHITE" />
                      </center>
                      <bottom>
                         <Label fx:id="version" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" styleClass="version" stylesheets="@../styles.css" text="Label" textAlignment="CENTER" BorderPane.alignment="BOTTOM_RIGHT">

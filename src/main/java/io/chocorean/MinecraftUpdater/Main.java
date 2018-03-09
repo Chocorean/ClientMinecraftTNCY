@@ -8,13 +8,15 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/app.fxml"));
         primaryStage.setTitle("Minecraft Updater for TNCY");
-        primaryStage.setScene(new Scene(root, 800, 480));
+        primaryStage.setScene(new Scene(root, 1200, 800));
         primaryStage.show();
     }
 

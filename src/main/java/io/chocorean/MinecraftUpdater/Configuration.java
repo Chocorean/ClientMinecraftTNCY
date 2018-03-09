@@ -10,8 +10,10 @@ public class Configuration {
     private String mods;
     private String changelog;
     private String styles;
+    private String version;
+    private static Configuration config;
 
-    private Configuration(String root, String mods, String changelog, String styles) {
+    private Configuration(String root, String mods, String changelog, String styles, String version) {
         this.mods = root + "/" + mods;
         this.changelog = root + "/" + changelog;
         this.styles = root + "/" + styles;
@@ -29,7 +31,7 @@ public class Configuration {
         return this.styles;
     }
 
-    public static Configuration loadFromFileProperties() {
+    private static Configuration loadFromFileProperties() {
         Properties prop = new Properties();
         InputStream input;
         try {
@@ -39,7 +41,8 @@ public class Configuration {
                     prop.getProperty("ROOT_URL"),
                     prop.getProperty("MODS_FILE"),
                     prop.getProperty("CHANGELOG_FILE"),
-                    prop.getProperty("CSS_FILE")
+                    prop.getProperty("CSS_FILE"),
+                    prop.getProperty("VERSION")
             );
         } catch (IOException e) { e.printStackTrace(); }
         return null;
@@ -51,6 +54,13 @@ public class Configuration {
                 "mods='" + mods + '\'' +
                 ", changelog='" + changelog + '\'' +
                 ", styles='" + styles + '\'' +
+                ", version='" + version + '\'' +
                 '}';
+    }
+
+    public static Configuration getInstance() {
+        if(Configuration.config == null)
+            Configuration.config = loadFromFileProperties();
+        return Configuration.config;
     }
 }

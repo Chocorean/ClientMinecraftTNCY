@@ -9,11 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
 import java.io.File;
+import java.util.List;
 
 public class AppController {
 
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
+    @FXML private Button updateButton;
     @FXML private Label version;
     private String modsPath;
 
@@ -25,6 +27,11 @@ public class AppController {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
             this.updateModsDirectory(chooser.showDialog(((Node) event.getSource()).getScene().getWindow()).getAbsolutePath());
+        });
+        this.updateButton.setOnMouseReleased(event -> {
+            List<File> installed =ModsUpdater.update(this.modsPath);
+            List<File> unused = ModsUpdater.getUnusedMods(this.modsPath, installed);
+
         });
     }
 
