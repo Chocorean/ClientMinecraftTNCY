@@ -1,11 +1,10 @@
-package main.window;
+package io.chocorean.MinecraftUpdater.window;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -16,7 +15,6 @@ import java.nio.file.StandardCopyOption;
 public class BottomPanel extends JPanel implements ActionListener {
     // Component
     private JTextField pathToMods;
-    private String separator;
 
     BottomPanel() {
         super();
@@ -24,7 +22,7 @@ public class BottomPanel extends JPanel implements ActionListener {
         GridBagConstraints c = new GridBagConstraints();
 
         String separator;
-        if (System.getProperty("os.name").contains("Windows")) {
+            if (System.getProperty("os.name").contains("Windows")) {
             separator = "\\";
         } else {
             separator="/";

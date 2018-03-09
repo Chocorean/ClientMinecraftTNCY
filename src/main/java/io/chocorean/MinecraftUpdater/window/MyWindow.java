@@ -1,7 +1,6 @@
-package main.window;
+package io.chocorean.MinecraftUpdater.window;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MyWindow extends JFrame {
     // Component list

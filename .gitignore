@@ -1,4 +1,5 @@
 .idea/
-Updater.iml
 out/
 src/META-INF/
+*.iml
+target

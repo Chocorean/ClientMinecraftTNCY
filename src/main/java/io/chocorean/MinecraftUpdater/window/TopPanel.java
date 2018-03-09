@@ -1,4 +1,5 @@
-package main.window;
+package io.chocorean.MinecraftUpdater.window;
+
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -37,23 +38,23 @@ public class TopPanel extends JPanel {
 
         try {
                 // downloading files
-            URL file = new URL("https://raw.githubusercontent.com/Chocorean/ClientMinecraftTNCY/master/src/resource/html/changelog.html");
+            URL file = new URL("https://raw.githubusercontent.com/Chocorean/ClientMinecraftTNCY/master/src/resource/changelog/changelog.changelog");
             ReadableByteChannel rbc = Channels.newChannel(file.openStream());
-            FileOutputStream fos = new FileOutputStream("changelog.html");
+            FileOutputStream fos = new FileOutputStream("changelog.changelog");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            file = new URL("https://raw.githubusercontent.com/Chocorean/ClientMinecraftTNCY/master/src/resource/html/stylesheet.css");
+            file = new URL("https://raw.githubusercontent.com/Chocorean/ClientMinecraftTNCY/master/src/resource/changelog/styles.css");
             rbc = Channels.newChannel(file.openStream());
             fos = new FileOutputStream("stylesheet.css");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 
-            webPage.setPage("file:changelog.html");
+            webPage.setPage("file:changelog.changelog");
 
             // rm files
-            new File("changelog.html").delete();
+            new File("changelog.changelog").delete();
             new File("stylesheet.css").delete();
         }catch (IOException e) {
-            webPage.setContentType("text/html");
-            webPage.setText("<html><h1>Erreur</h1>Impossible d'ouvrir le fichier.</html>");
+            webPage.setContentType("text/changelog");
+            webPage.setText("<changelog><h1>Erreur</h1>Impossible d'ouvrir le fichier.</changelog>");
         }
 
         webContainer = new JScrollPane(webPage);
