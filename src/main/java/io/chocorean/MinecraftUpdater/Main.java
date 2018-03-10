@@ -8,10 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.file.Paths;
-
+/**
+ * Main class
+ *
+ * @author mcdostone
+ */
 public class Main extends Application {
 
     @Override
@@ -22,7 +23,6 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 1200, 800));
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);

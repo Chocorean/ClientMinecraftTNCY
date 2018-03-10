@@ -1,6 +1,7 @@
-package io.chocorean.MinecraftUpdater;
+package io.chocorean.MinecraftUpdater.installers;
 
-import javafx.scene.control.Label;
+import io.chocorean.MinecraftUpdater.Configuration;
+import io.chocorean.MinecraftUpdater.core.Installer;
 import javafx.scene.control.ProgressBar;
 
 import java.io.*;
@@ -11,16 +12,31 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class ModsUpdater {
+public class ModsUpdater implements Installer<List<File>> {
 
     private static final int NB_THREADS = 10;
+    private final ProgressBar progressBar;
+    private final File modsDirectory;
+
+    public ModsUpdater(File modsDirectory, ProgressBar progressBar) {
+        this.modsDirectory = modsDirectory;
+        this.progressBar = progressBar;
+    }
 
 
-    public static List<File> update(File modsDirectory, ProgressBar progression) {
-        progression.setProgress(0);
+    public List<File> getUnusedMods(File modsDirectory, List<File> installed) {
+        return Arrays.stream(Objects.requireNonNull(modsDirectory.listFiles()))
+                .filter(f -> !installed.contains(f) && f.getName().endsWith(".jar"))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<File> install() {
+        this.progressBar.setProgress(0);
         ExecutorService service = Executors.newFixedThreadPool(NB_THREADS);
         List<Callable<File>> tasks = new ArrayList<>();
         List<Future<File>> futureList = null;
@@ -38,12 +54,11 @@ public class ModsUpdater {
             List<URL> urls = new ArrayList<>();
             while ((line = br.readLine()) != null)
                 urls.add(new URL(line.trim()));
-            tasks.addAll(prepareInstallModTask(urls, modsDirectory, progression));
+            tasks.addAll(this.prepareInstallModTask(urls, this.modsDirectory, this.progressBar));
             futureList = service.invokeAll(tasks);
-                } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        progression.setProgress(100);
         if(futureList != null)
             return futureList.stream().map(f -> {
                 try {
@@ -55,8 +70,8 @@ public class ModsUpdater {
             return null;
     }
 
-    public static List<Callable<File>> prepareInstallModTask(List<URL> urls, File destination, ProgressBar progress) {
-        double increment = 100 / urls.size();
+    private List<Callable<File>> prepareInstallModTask(List<URL> urls, File destination, ProgressBar progress) {
+        double increment = 1.0 / urls.size();
         return urls.stream().map(my -> (Callable<File>) () -> {
             File absolutefilePathMod = Paths.get(destination.getAbsolutePath(), new File(my.getFile()).getName()).toFile();
             if (!absolutefilePathMod.exists()) {
@@ -74,16 +89,5 @@ public class ModsUpdater {
         }).collect(Collectors.toList());
     }
 
-        public static List<File> getUnusedMods(File modsDirectory, List<File> installed) {
-            return Arrays.stream(modsDirectory.listFiles())
-                    .filter(f -> !installed.contains(f) && f.getName().endsWith(".jar"))
-                    .collect(Collectors.toList());
-        }
-
-        public static void deleteFile(List<File> toDelete) {
-            for(File m: toDelete)
-                m.delete();
-
-        }
-    }
+}
 

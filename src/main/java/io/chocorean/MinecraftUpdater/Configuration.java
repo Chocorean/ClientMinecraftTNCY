@@ -6,15 +6,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * Configuration of the app.
+ * THe configuration file is available in /resources/updater.properties.
+ *
+ * @author mcdostone
+ */
 public class Configuration {
 
     private static final String UPDATER_CONFIG_FILE = "/updater.properties";
+    private static Configuration config;
     private final URL forge;
     private final URL mods;
     private final URL changelog;
     private final URL styles;
     private final String version;
-    private static Configuration config;
 
     private Configuration(String root, String mods, String changelog, String styles, String version, String forge) throws MalformedURLException {
         this.mods = new URL(root + "/" + mods);

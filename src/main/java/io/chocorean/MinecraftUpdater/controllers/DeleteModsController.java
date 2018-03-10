@@ -1,4 +1,4 @@
-package io.chocorean.MinecraftUpdater;
+package io.chocorean.MinecraftUpdater.controllers;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -10,6 +10,11 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Controller of the dialog view
+ *
+ * @author mcdostone
+ */
 public class DeleteModsController {
 
     private final List<File> unusedMods;
@@ -17,7 +22,7 @@ public class DeleteModsController {
     @FXML private ScrollPane grid;
     @FXML private Button delete;
     @FXML private Button cancel;
-    @FXML private AppController appController;
+    @FXML private final AppController appController;
 
     public DeleteModsController(List<File> unusedMods, AppController controller) {
         this.unusedMods = unusedMods;
@@ -48,6 +53,5 @@ public class DeleteModsController {
             m.delete();
         this.appController.closeDialog();
     }
-
 
 }

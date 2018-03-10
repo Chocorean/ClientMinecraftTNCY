@@ -1,5 +1,8 @@
-package io.chocorean.MinecraftUpdater;
+package io.chocorean.MinecraftUpdater.controllers;
 
+import io.chocorean.MinecraftUpdater.Configuration;
+import io.chocorean.MinecraftUpdater.installers.ForgeInstaller;
+import io.chocorean.MinecraftUpdater.installers.ModsUpdater;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +23,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller of the main view
+ *
+ * @author mcdostone
+ */
 public class AppController {
 
+    private static final String MODS_DIR =  ".minecraft" + File.separator + "mods";
     @FXML private AnchorPane rootPane;
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
@@ -32,17 +41,15 @@ public class AppController {
     @FXML private Label version;
     private File modsPath;
     private Stage dialog;
-    private static final String MODS_DIR =  ".minecraft" + File.separator + "mods";
 
     @FXML
     private void initialize() {
-        this.resetProgression();
+        this.progression.setProgress(0);
         Configuration conf = Configuration.getInstance();
         this.version.setText(conf.getVersion());
-        File modsDirectory = new File(System.getProperty("user.home") + File.separator + MODS_DIR);
-        if(!modsDirectory.exists())
-            modsDirectory = new File(System.getProperty("user.home"));
-        this.updateModsDirectory(modsDirectory);
+        this.setDefaultModsDirectory();
+
+        // Event when press 'change' button
         this.changeModsLocation.setOnMouseReleased(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -50,34 +57,46 @@ public class AppController {
             if(newPath != null)
                 this.updateModsDirectory(newPath);
         });
-        this.updateModsButton.setOnMouseReleased(event -> {
-            new Thread(() -> {
-                Platform.runLater(() -> setMessage("Installing mods..."));
-                ModsUpdater.update(this.modsPath, progression);
-                Platform.runLater(() -> setMessage("Mods installed !"));
-            }).start();
-        });
+
+        // Event when press 'update mods' button
+        this.updateModsButton.setOnMouseReleased(event -> new Thread(() -> {
+            Platform.runLater(() -> setMessage("Installing mods..."));
+            ModsUpdater updater = new ModsUpdater(this.modsPath, progression);
+            List<File> installed = updater.install();
+            Platform.runLater(() -> setMessage("Mods installed !"));
+            this.progression.setProgress(1);
+            List<File> unused = updater.getUnusedMods(this.modsPath, installed);
+            this.askForUnusedMods(unused);
+        }).start());
+
+        // Event when press 'install forge' button
         this.installForgeButton.setOnMouseReleased(event -> {
             Platform.runLater(() -> setMessage("Downloading forge client..."));
-            ForgeInstaller.install(conf.getForgeUrl(), progression, () -> setMessage("Forge is installed !"));
+            ForgeInstaller installer = new ForgeInstaller(
+                    conf.getForgeUrl(),
+                    progression,
+                    () -> setMessage("Forge is installed !")
+            );
+            installer.install();
         });
     }
 
-    private void checkUnusedMods(List<File> installedMods) {
-        List<File> unused = ModsUpdater.getUnusedMods(this.modsPath, installedMods);
-        if(!unused.isEmpty()) {
+    private void askForUnusedMods(List<File> unusedMods) {
+        if(!unusedMods.isEmpty()) {
             FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/deleteModsDialog.fxml"));
             try {
                 Stage stage = (Stage) this.rootPane.getScene().getWindow();
-                loader.setController(new DeleteModsController(unused, this));
+                loader.setController(new DeleteModsController(unusedMods, this));
                 BorderPane root = loader.load();
                 root.setMinHeight(Region.USE_PREF_SIZE);
-                this.dialog = new Stage();
-                this.dialog.initModality(Modality.WINDOW_MODAL);
-                this.dialog.initOwner(stage);
-                Scene s = new Scene(root);
-                this.dialog.setScene(s);
-                this.dialog.showAndWait();
+                Platform.runLater(() -> {
+                    this.dialog = new Stage();
+                    this.dialog.initModality(Modality.WINDOW_MODAL);
+                    this.dialog.initOwner(stage);
+                    Scene s = new Scene(root);
+                    this.dialog.setScene(s);
+                    this.dialog.showAndWait();
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,12 +113,15 @@ public class AppController {
             this.dialog.close();
     }
 
-    public void resetProgression() {
-        this.progression.setProgress(0);
-    }
-
     public void setMessage(String msg) {
         this.message.setText(msg);
+    }
+
+    private void setDefaultModsDirectory() {
+        File modsDirectory = new File(System.getProperty("user.home") + File.separator + MODS_DIR);
+        if(!modsDirectory.exists())
+            modsDirectory = new File(System.getProperty("user.home"));
+        this.updateModsDirectory(modsDirectory);
     }
 
 }
