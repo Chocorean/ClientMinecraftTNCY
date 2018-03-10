@@ -1,5 +1,6 @@
 package io.chocorean.MinecraftUpdater;
 
+import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 
 import java.io.File;
@@ -13,10 +14,18 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class ForgeInstaller {
 
-    public static void install(URL forgeURL, ProgressBar progress) {
+    private final AppController controller;
+
+    public ForgeInstaller(AppController ctrl) {
+        this.controller = ctrl;
+    }
+
+    public static void install(URL forgeURL, ProgressBar progress, Runnable callback) {
         progress.setProgress(0);
         ExecutorService service = Executors.newFixedThreadPool(1);
         service.submit(() -> {
@@ -28,13 +37,14 @@ public class ForgeInstaller {
                 progress.setProgress(0.1);
                 mod_fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                 progress.setProgress(1);
-                Runtime.getRuntime().exec("java -jar " + forgeFile);
-                //progress.setProgress(100);
-            } catch (IOException e) {
+                Process p = Runtime.getRuntime().exec("java -jar " + forgeFile);
+                p.waitFor();
+                if(p.exitValue() == 0)
+                    Platform.runLater(callback);
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        service.shutdown();
     }
 
 

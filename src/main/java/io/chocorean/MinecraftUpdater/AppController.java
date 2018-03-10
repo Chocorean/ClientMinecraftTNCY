@@ -1,28 +1,28 @@
 package io.chocorean.MinecraftUpdater;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppController {
 
     @FXML private AnchorPane rootPane;
-    @FXML private BorderPane bottom;
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
     @FXML private Button updateModsButton;
@@ -51,11 +51,16 @@ public class AppController {
                 this.updateModsDirectory(newPath);
         });
         this.updateModsButton.setOnMouseReleased(event -> {
-            List<File> installed = ModsUpdater.update(this.modsPath, progression);
-            this.checkUnusedMods(installed);
-            this.message.setText(installed.size() + " mods have been updated !");
+            new Thread(() -> {
+                Platform.runLater(() -> setMessage("Installing mods..."));
+                ModsUpdater.update(this.modsPath, progression);
+                Platform.runLater(() -> setMessage("Mods installed !"));
+            }).start();
         });
-        this.installForgeButton.setOnMouseReleased(event -> ForgeInstaller.install(conf.getForgeUrl(), progression));
+        this.installForgeButton.setOnMouseReleased(event -> {
+            Platform.runLater(() -> setMessage("Downloading forge client..."));
+            ForgeInstaller.install(conf.getForgeUrl(), progression, () -> setMessage("Forge is installed !"));
+        });
     }
 
     private void checkUnusedMods(List<File> installedMods) {
@@ -93,8 +98,8 @@ public class AppController {
         this.progression.setProgress(0);
     }
 
-    public ProgressBar getProgressBar() {
-        return this.progression;
+    public void setMessage(String msg) {
+        this.message.setText(msg);
     }
 
 }

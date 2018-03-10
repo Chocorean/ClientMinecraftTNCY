@@ -1,5 +1,6 @@
 package io.chocorean.MinecraftUpdater;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
 import java.io.*;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class ModsUpdater {
 
-    private static final int NB_THREADS = 5;
+    private static final int NB_THREADS = 10;
 
 
     public static List<File> update(File modsDirectory, ProgressBar progression) {
@@ -37,10 +38,9 @@ public class ModsUpdater {
             List<URL> urls = new ArrayList<>();
             while ((line = br.readLine()) != null)
                 urls.add(new URL(line.trim()));
-
             tasks.addAll(prepareInstallModTask(urls, modsDirectory, progression));
             futureList = service.invokeAll(tasks);
-        } catch (IOException | InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         progression.setProgress(100);
@@ -65,7 +65,7 @@ public class ModsUpdater {
                     rbc = Channels.newChannel(my.openStream());
                     FileOutputStream fos = new FileOutputStream(absolutefilePathMod);
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                    progress.setProgress(progress.getProgress() + 0.1);
+                    progress.setProgress(progress.getProgress() + increment);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
