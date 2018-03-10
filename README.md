@@ -18,6 +18,12 @@ Elle contient le *changelog*, et permet de mettre à jour automatiquement son cl
 
 Voir [LICENSE](https://github.com/Chocorean/ClientMinecraftTNCY/blob/master/LICENSE).
 
+## Création du jar
+
+```bash
+mvn clean package
+```
+
 ## Utilisation
 
 Exécuter l'application avec `java -jar Updater.jar`. Renseigner le chemin de destination où enregistrer les mods (le contenu du dossier sera nettoyé avant téléchargement), et mettre à jour.

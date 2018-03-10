@@ -1,4 +1,7 @@
 .idea/
-Updater.iml
 out/
 src/META-INF/
+*.iml
+target
+mods.txt
+*.jar.log
