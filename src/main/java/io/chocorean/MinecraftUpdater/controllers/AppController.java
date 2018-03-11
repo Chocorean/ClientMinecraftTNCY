@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 
@@ -122,13 +123,12 @@ public class AppController {
         String userHomeDir = System.getProperty("user.home", ".");
         String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         File targetDir;
-        String mcDir = ".minecraft";
         if (osType.contains("win") && System.getenv("APPDATA") != null)
-            targetDir = new File(System.getenv("APPDATA"), mcDir);
+            targetDir = new File(System.getenv("APPDATA"), MODS_DIR);
         else if (osType.contains("mac"))
-            targetDir = new File(new File(new File(userHomeDir, "Library"),"Application Support"),"minecraft");
+            targetDir = Paths.get(userHomeDir, "Library","Application Support", MODS_DIR).toFile();
         else
-            targetDir = new File(userHomeDir, mcDir);
+            targetDir = new File(userHomeDir, MODS_DIR);
         return targetDir;
     }
 
