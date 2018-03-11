@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Controller of the main view
@@ -47,7 +48,7 @@ public class AppController {
         this.progression.setProgress(0);
         Configuration conf = Configuration.getInstance();
         this.version.setText(conf.getVersion());
-        this.setDefaultModsDirectory();
+        this.updateModsDirectory(this.getDefaultModsDirectory());
 
         // Event when press 'change' button
         this.changeModsLocation.setOnMouseReleased(event -> {
@@ -113,15 +114,22 @@ public class AppController {
             this.dialog.close();
     }
 
-    public void setMessage(String msg) {
+    private void setMessage(String msg) {
         this.message.setText(msg);
     }
 
-    private void setDefaultModsDirectory() {
-        File modsDirectory = new File(System.getProperty("user.home") + File.separator + MODS_DIR);
-        if(!modsDirectory.exists())
-            modsDirectory = new File(System.getProperty("user.home"));
-        this.updateModsDirectory(modsDirectory);
+    private File getDefaultModsDirectory() {
+        String userHomeDir = System.getProperty("user.home", ".");
+        String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        File targetDir;
+        String mcDir = ".minecraft";
+        if (osType.contains("win") && System.getenv("APPDATA") != null)
+            targetDir = new File(System.getenv("APPDATA"), mcDir);
+        else if (osType.contains("mac"))
+            targetDir = new File(new File(new File(userHomeDir, "Library"),"Application Support"),"minecraft");
+        else
+            targetDir = new File(userHomeDir, mcDir);
+        return targetDir;
     }
 
 }
