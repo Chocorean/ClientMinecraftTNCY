@@ -26,11 +26,14 @@ https://files.forgecdn.net/files/2452/264/gendustry-1.6.5.31-mc1.10.2.jar
 https://files.forgecdn.net/files/2380/911/Guide-API-1.10.2-2.0.3-46.jar
 https://files.forgecdn.net/files/2435/559/ImmersiveEngineering-0.10-61.jar
 https://addons.cursecdn.com/files/2315/240/InventoryTweaks-1.61-58.jar
+https://media.forgecdn.net/files/2425/847/ironchest-1.10.2-7.0.15.804.jar
 https://files.forgecdn.net/files/2412/9/jei_1.10.2-3.14.7.419.jar
 https://addons.cursecdn.com/files/2382/712/jeibees-0.9.0.5-mc1.10.2.jar
 https://addons.cursecdn.com/files/2435/300/journeymap-1.10.2-5.4.7.jar
 https://addons.cursecdn.com/files/2351/189/JustEnoughResources-1.10.2-0.5.8.98.jar
 https://addons.cursecdn.com/files/2380/279/Mantle-1.10.2-1.1.5.jar
+https://media.forgecdn.net/files/2541/693/More+Commands-1.1.jar
+https://media.forgecdn.net/files/2525/819/plustic-5.2.1.3.jar
 https://addons.cursecdn.com/files/2347/126/Psi-r1.0-42.jar
 https://media.forgecdn.net/files/2326/170/rangedpumps-0.3.jar
 https://files.forgecdn.net/files/2425/964/TConstruct-1.10.2-2.6.5.jar
