@@ -32,7 +32,6 @@ import java.util.Locale;
  */
 public class AppController {
 
-    private static final String MODS_DIR =  ".minecraft" + File.separator + "mods";
     @FXML private AnchorPane rootPane;
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
@@ -120,15 +119,16 @@ public class AppController {
     }
 
     private File getDefaultModsDirectory() {
+        String modsDir =  ".minecraft" + File.separator + "mods";
         String userHomeDir = System.getProperty("user.home", ".");
         String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         File targetDir;
         if (osType.contains("win") && System.getenv("APPDATA") != null)
-            targetDir = new File(System.getenv("APPDATA"), MODS_DIR);
+            targetDir = new File(System.getenv("APPDATA"), modsDir);
         else if (osType.contains("mac"))
-            targetDir = Paths.get(userHomeDir, "Library","Application Support", MODS_DIR).toFile();
+            targetDir = Paths.get(userHomeDir, "Library","Application Support", "minecraft" + File.separator + "mods").toFile();
         else
-            targetDir = new File(userHomeDir, MODS_DIR);
+            targetDir = new File(userHomeDir, modsDir);
         return targetDir;
     }
 
