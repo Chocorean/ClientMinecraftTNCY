@@ -14,6 +14,7 @@ https://files.forgecdn.net/files/2380/915/chiselsandbits-12.12.jar
 https://files.forgecdn.net/files/2400/103/CodeChickenCore-1.10.2-2.4.1.102-universal.jar
 https://files.forgecdn.net/files/2447/314/CodeChickenLib-1.10.2-2.5.9.283-universal.jar
 https://files.forgecdn.net/files/2453/215/CoFHCore-1.10.2-4.1.11.16-universal.jar
+https://minecraft-inside.ru/uploads/files/2017-05/compatlayer_1.10_0.2.8.jar
 https://files.forgecdn.net/files/2465/568/CTM-MC1.10.2-0.2.2.24.jar
 https://files.forgecdn.net/files/2462/914/Draconic-Evolution-1.10.2-2.1.5.262-universal.jar
 https://files.forgecdn.net/files/2415/996/EnderCore-1.10.2-0.4.1.66-beta.jar
