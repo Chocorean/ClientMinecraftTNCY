@@ -1,0 +1,20 @@
+language: java
+install: true
+
+addons:
+  sonarcloud:
+    #organization: "mcdostone-github"
+    organization: ""
+    token:
+      secure: $SONAR_TOKEN
+
+jdk:
+  - oraclejdk8
+
+script:
+  -  mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
