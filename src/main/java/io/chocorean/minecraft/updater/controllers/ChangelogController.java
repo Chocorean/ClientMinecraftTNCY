@@ -1,15 +1,12 @@
-package io.chocorean.MinecraftUpdater.controllers;
+package io.chocorean.minecraft.updater.controllers;
 
-import io.chocorean.MinecraftUpdater.Configuration;
+import io.chocorean.minecraft.updater.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.web.WebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;

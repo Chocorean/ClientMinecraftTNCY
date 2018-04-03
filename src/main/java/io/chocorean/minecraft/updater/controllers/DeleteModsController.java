@@ -1,4 +1,4 @@
-package io.chocorean.MinecraftUpdater.controllers;
+package io.chocorean.minecraft.updater.controllers;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;

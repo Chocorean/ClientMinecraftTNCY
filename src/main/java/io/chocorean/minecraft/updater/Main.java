@@ -1,4 +1,4 @@
-package io.chocorean.MinecraftUpdater;
+package io.chocorean.minecraft.updater;
 
 
 import javafx.application.Application;

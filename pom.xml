@@ -32,7 +32,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>io.chocorean.MinecraftUpdater.Main</mainClass>
+              <mainClass>io.chocorean.minecraft.updater.Main</mainClass>
             </manifest>
           </archive>
         </configuration>

@@ -1,8 +1,8 @@
-package io.chocorean.MinecraftUpdater.controllers;
+package io.chocorean.minecraft.updater.controllers;
 
-import io.chocorean.MinecraftUpdater.Configuration;
-import io.chocorean.MinecraftUpdater.installers.ForgeInstaller;
-import io.chocorean.MinecraftUpdater.installers.ModsUpdater;
+import io.chocorean.minecraft.updater.Configuration;
+import io.chocorean.minecraft.updater.installers.ForgeInstaller;
+import io.chocorean.minecraft.updater.installers.ModsUpdater;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Paths;
