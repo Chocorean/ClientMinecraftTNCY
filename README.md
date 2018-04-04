@@ -1,3 +1,25 @@
+[![Build Status](https://travis-ci.org/Chocorean/ClientMinecraftTNCY.svg?branch=master)](https://travis-ci.org/Chocorean/ClientMinecraftTNCY)
+[![vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=vulnerabilities)](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=vulnerabilities)
+[![vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=alert_status
+)](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=alert_status
+)
+[![code smells](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=code_smells
+)](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=code_smells
+)
+[![bugs](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=bugs
+)](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=bugs
+)
+[![duplicate](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=duplicated_lines_density
+)](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=duplicated_lines_density
+)
+
+
+
+
+
+
+
+
 # ClientMinecraftTNCY
 
 ## Sommaire
