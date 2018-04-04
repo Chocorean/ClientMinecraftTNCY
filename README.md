@@ -13,13 +13,6 @@
 )](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean%3Aminecraft-updater&metric=duplicated_lines_density
 )
 
-
-
-
-
-
-
-
 # ClientMinecraftTNCY
 
 ## Sommaire
