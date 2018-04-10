@@ -1,8 +1,8 @@
-package io.chocorean.MinecraftUpdater.controllers;
+package io.chocorean.minecraft.updater.controllers;
 
-import io.chocorean.MinecraftUpdater.Configuration;
-import io.chocorean.MinecraftUpdater.installers.ForgeInstaller;
-import io.chocorean.MinecraftUpdater.installers.ModsUpdater;
+import io.chocorean.minecraft.updater.Configuration;
+import io.chocorean.minecraft.updater.installers.ForgeInstaller;
+import io.chocorean.minecraft.updater.installers.ModsUpdater;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,12 +15,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +35,6 @@ import java.util.Locale;
  */
 public class AppController {
 
-    private static final String MODS_DIR =  ".minecraft" + File.separator + "mods";
     @FXML private AnchorPane rootPane;
     @FXML private TextField modsDirectory;
     @FXML private Button changeModsLocation;
@@ -81,6 +83,9 @@ public class AppController {
             );
             installer.install();
         });
+
+        if(!this.checkNetwork())
+            this.showNoInternet();
     }
 
     private void askForUnusedMods(List<File> unusedMods) {
@@ -120,16 +125,53 @@ public class AppController {
     }
 
     private File getDefaultModsDirectory() {
+        String modsDir =  ".minecraft" + File.separator + "mods";
         String userHomeDir = System.getProperty("user.home", ".");
         String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         File targetDir;
         if (osType.contains("win") && System.getenv("APPDATA") != null)
-            targetDir = new File(System.getenv("APPDATA"), MODS_DIR);
+            targetDir = new File(System.getenv("APPDATA"), modsDir);
         else if (osType.contains("mac"))
-            targetDir = Paths.get(userHomeDir, "Library","Application Support", MODS_DIR).toFile();
+            targetDir = Paths.get(userHomeDir, "Library","Application Support", "minecraft" + File.separator + "mods").toFile();
         else
-            targetDir = new File(userHomeDir, MODS_DIR);
+            targetDir = new File(userHomeDir, modsDir);
         return targetDir;
+    }
+
+    public static boolean checkNetwork() {
+        try {
+            final URL url = new URL("http://www.github.com");
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void showChangelog() {
+            FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/changelog.fxml"));
+            try {
+                AnchorPane changelog = loader.load();
+                BorderPane pane = (BorderPane) this.rootPane.getChildren().get(0);
+                pane.setCenter(changelog);
+                pane.getBottom().setDisable(false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    private void showNoInternet() {
+        FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/no-internet.fxml"));
+        try {
+            loader.setController(new NoInternetController(this));
+            StackPane character = loader.load();
+            BorderPane pane = (BorderPane) this.rootPane.getChildren().get(0);
+            pane.setCenter(character);
+            pane.getBottom().setDisable(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

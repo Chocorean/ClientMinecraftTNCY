@@ -1,6 +1,6 @@
-package io.chocorean.MinecraftUpdater.core;
+package io.chocorean.minecraft.updater.core;
 
-import io.chocorean.MinecraftUpdater.exceptions.InstallException;
+import io.chocorean.minecraft.updater.exceptions.InstallException;
 
 /**
  * Interface for all installers

@@ -1,4 +1,4 @@
-package io.chocorean.MinecraftUpdater.exceptions;
+package io.chocorean.minecraft.updater.exceptions;
 
 /**
  * Exception when there is a problem during an installation.

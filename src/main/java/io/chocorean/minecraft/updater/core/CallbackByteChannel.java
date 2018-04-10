@@ -1,4 +1,4 @@
-package io.chocorean.MinecraftUpdater.core;
+package io.chocorean.minecraft.updater.core;
 
 import javafx.scene.control.ProgressBar;
 

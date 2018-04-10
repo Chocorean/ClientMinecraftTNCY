@@ -1,7 +1,7 @@
-package io.chocorean.MinecraftUpdater.installers;
+package io.chocorean.minecraft.updater.installers;
 
-import io.chocorean.MinecraftUpdater.core.CallbackByteChannel;
-import io.chocorean.MinecraftUpdater.core.Installer;
+import io.chocorean.minecraft.updater.core.CallbackByteChannel;
+import io.chocorean.minecraft.updater.core.Installer;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 
