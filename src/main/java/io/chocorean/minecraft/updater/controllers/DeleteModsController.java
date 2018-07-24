@@ -22,9 +22,9 @@ public class DeleteModsController {
     @FXML private ScrollPane grid;
     @FXML private Button delete;
     @FXML private Button cancel;
-    @FXML private final AppController appController;
+    @FXML private final BottomController appController;
 
-    public DeleteModsController(List<File> unusedMods, AppController controller) {
+    public DeleteModsController(List<File> unusedMods, BottomController controller) {
         this.unusedMods = unusedMods;
         this.appController = controller;
     }
