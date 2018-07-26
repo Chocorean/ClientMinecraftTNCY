@@ -6,3 +6,4 @@ target
 mods.txt
 *.jar.loglogs
 output
+*.log

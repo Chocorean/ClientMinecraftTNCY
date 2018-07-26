@@ -1,5 +1,6 @@
 package io.chocorean.minecraft.updater.controllers;
 
+import com.google.gson.Gson;
 import io.chocorean.minecraft.updater.Configuration;
 import io.chocorean.minecraft.updater.installers.ForgeInstaller;
 import io.chocorean.minecraft.updater.installers.ModsUpdater;
@@ -19,12 +20,12 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class BottomController {
     @FXML private AnchorPane bottomPane;
@@ -83,95 +84,164 @@ public class BottomController {
             List<File> unused = updater.getUnusedMods(this.modsPath, installed);
             this.askForUnusedMods(unused);
             try {
-                String path = this.getDefaultModsDirectory().getAbsolutePath().substring(0, (int) (this.getDefaultModsDirectory().getAbsolutePath().length()-4));
+                // path to .minecraft
+                String path = this.getDefaultModsDirectory().getAbsolutePath().substring(0, (this.getDefaultModsDirectory().getAbsolutePath().length()-4));
 
-                // launch minecraft forge
+                // creating folder if it doesnt exist
+                File versionFolder = new File(path + "versions/1.10.2-TNCY");
+                if (!versionFolder.exists()) {
+                    if (!versionFolder.mkdir()) {
+                        this.message.setText("Unable to create a directory '1.10.2-TNCY' at path "+ path +"versions/");
+
+                        this.javaArguments.setDisable(false);
+                        this.username.setDisable(false);
+                        this.playButton.setDisable(false);
+
+                        return;
+                    }
+                }
+
+                // defining the content of jsonFile
+                String content = "{\n" +
+                        "  \"inheritsFrom\": \"1.10.2\",\n" +
+                        "  \"id\": \"1.10.2-TNCY\",\n" +
+                        "  \"time\": \"2018-07-25T18:09:00+01:00\",\n" +
+                        "  \"releaseTime\": \"1960-01-01T08:00:00+01:00\",\n" +
+                        "  \"type\": \"release\",\n" +
+                        "  \"minecraftArguments\": \"--username " + this.username.getText() + " --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge\",\n" +
+                        "  \"libraries\": [\n" +
+                        "    {\n" +
+                        "      \"name\": \"net.minecraftforge:forge:1.10.2-12.18.3.2185\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"net.minecraft:launchwrapper:1.12\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.ow2.asm:asm-all:5.0.3\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"jline:jline:2.13\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"com.typesafe.akka:akka-actor_2.11:2.3.3\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"com.typesafe:config:1.2.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-actors-migration_2.11:1.1.0\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-compiler:2.11.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang.plugins:scala-continuations-library_2.11:1.0.2\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang.plugins:scala-continuations-plugin_2.11.1:1.0.2\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-library:2.11.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-parser-combinators_2.11:1.0.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-reflect:2.11.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-swing_2.11:1.0.1\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"org.scala-lang:scala-xml_2.11:1.0.2\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"lzma:lzma:0.0.1\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"net.sf.jopt-simple:jopt-simple:4.6\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"java3d:vecmath:1.5.2\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"net.sf.trove4j:trove4j:3.0.3\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"net.minecraftforge:MercuriusUpdater:1.10.2\",\n" +
+                        "      \"url\": \"http://files.minecraftforge.net/maven/\"\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"mainClass\": \"net.minecraft.launchwrapper.Launch\",\n" +
+                        "  \"minimumLauncherVersion\": 0,\n" +
+                        "  \"jar\": \"1.10.2\",\n" +
+                        "  \"downloads\": {}\n" +
+                        "}";
+
+                // creating json file if it doesnt exist
+                File jsonFile = new File(path + "versions/1.10.2-TNCY/1.10.2-TNCY.json");
+                if (!jsonFile.exists()) {
+                    if (!jsonFile.createNewFile()) {
+
+                        this.message.setText("Unable to create a file '1.10.2-TNCY.json' at path "+ path +"versions/1.10.2-TNCY/");
+
+                        this.javaArguments.setDisable(false);
+                        this.username.setDisable(false);
+                        this.playButton.setDisable(false);
+
+                        return;
+                    }
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
+
+                    writer.write(content);
+                    writer.close();
+                } else {
+                    // extract jsonFile's content
+                    FileInputStream fis = new FileInputStream(jsonFile);
+                    byte[] data = new byte[(int) jsonFile.length()];
+                    fis.read(data);
+                    fis.close();
+                    String jsonContent = new String(data, "UTF-8");
+                    // if jsonFile exists, replace username in field "minecraftArguments"
+                    Gson gson = new Gson();
+                    Map<String, String> jsonMap = gson.fromJson(jsonContent, Map.class);
+                    
+                    if (!this.username.getText().equals(jsonMap.get("minecraftArguments").split(" ")[1])) {
+                        jsonMap.remove("minecraftArguments");
+                        jsonMap.put("minecraftArguments", "--username " + this.username.getText() + " --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge");
+
+                        // saved jsonFile
+                        FileWriter writer = new FileWriter(jsonFile.getAbsolutePath());
+                        writer.write(gson.toJson(jsonMap));
+                        writer.close();
+                    }
+                }
+
+
+                // launch minecraft launcher
                 ArrayList<String> cmd = new ArrayList<>();
                 cmd.add("java");
-                cmd.add(this.javaArguments.getText().split(" ")[1]);
-                cmd.add("-XX:+UseConcMarkSweepGC");
-                cmd.add("-XX:-UseAdaptiveSizePolicy");
-                cmd.add(this.javaArguments.getText().split(" ")[0]);
-                cmd.add("-Djava.library.path=" + path + "versions/1.10.2-forge1.10.2-12.18.3.2185/1.10.2-forge1.10.2-12.18.3.2185-natives-45923197036750");
-                cmd.add("-Dminecraft.launcher.brand=java-minecraft-launcher");
-                cmd.add("-Dminecraft.launcher.version=1.6.89-j");
-                cmd.add("-Dminecraft.client.jar=" +path + "versions/1.10.2/1.10.2.jar");
-                cmd.add("-cp");
-                cmd.add(path + "libraries/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185.jar:" + path +
-                        "libraries/net/minecraft/launchwrapper/1.12/launchwrapper-1.12.jar:" + path +
-                        "libraries/org/ow2/asm/asm-all/5.0.3/asm-all-5.0.3.jar:" + path + "libraries/jline/jline/2.13/jline-2.13.jar:" +
-                        path + "libraries/com/typesafe/akka/akka-actor_2.11/2.3.3/akka-actor_2.11-2.3.3.jar:" + path +
-                        "libraries/com/typesafe/config/1.2.1/config-1.2.1.jar:" + path +
-                        "libraries/org/scala-lang/scala-actors-migration_2.11/1.1.0/scala-actors-migration_2.11-1.1.0.jar:" + path +
-                        "libraries/org/scala-lang/scala-compiler/2.11.1/scala-compiler-2.11.1.jar:" + path +
-                        "libraries/org/scala-lang/plugins/scala-continuations-library_2.11/1.0.2/scala-continuations-library_2.11-1.0.2.jar:" +
-                        path + "libraries/org/scala-lang/plugins/scala-continuations-plugin_2.11.1/1.0.2/scala-continuations-plugin_2.11.1-1.0.2.jar:" +
-                        path + "libraries/org/scala-lang/scala-library/2.11.1/scala-library-2.11.1.jar:" + path +
-                        "libraries/org/scala-lang/scala-parser-combinators_2.11/1.0.1/scala-parser-combinators_2.11-1.0.1.jar:" + path +
-                        "libraries/org/scala-lang/scala-reflect/2.11.1/scala-reflect-2.11.1.jar:" + path +
-                        "libraries/org/scala-lang/scala-swing_2.11/1.0.1/scala-swing_2.11-1.0.1.jar" + path +
-                        "libraries/org/scala-lang/scala-xml_2.11/1.0.2/scala-xml_2.11-1.0.2.jar:" + path +
-                        "libraries/lzma/lzma/0.0.1/lzma-0.0.1.jar" + path + "libraries/net/sf/jopt-simple/jopt-simple/4.6/jopt-simple-4.6.jar:" +
-                        path + "libraries/java3d/vecmath/1.5.2/vecmath-1.5.2.jar:" + path +
-                        "libraries/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar:" + path +
-                        "libraries/net/minecraftforge/MercuriusUpdater/1.10.2/MercuriusUpdater-1.10.2.jar:" + path +
-                        "libraries/com/mojang/netty/1.6/netty-1.6.jar:" + path + "libraries/oshi-project/oshi-core/1.1/oshi-core-1.1.jar:" +
-                        path + "libraries/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar:" + path +
-                        "libraries/net/java/dev/jna/platform/3.4.0/platform-3.4.0.jar:" + path +
-                        "libraries/com/ibm/icu/icu4j-core-mojang/51.2/icu4j-core-mojang-51.2.jar:" + path +
-                        "libraries/net/sf/jopt-simple/jopt-simple/4.6/jopt-simple-4.6.jar:" + path +
-                        "libraries/com/paulscode/codecjorbis/20101023/codecjorbis-20101023.jar:" + path +
-                        "libraries/com/paulscode/codecwav/20101023/codecwav-20101023.jar:" + path +
-                        "libraries/com/paulscode/libraryjavasound/20101123/libraryjavasound-20101123.jar:" + path +
-                        "libraries/com/paulscode/librarylwjglopenal/20100824/librarylwjglopenal-20100824.jar:" + path +
-                        "libraries/com/paulscode/soundsystem/20120107/soundsystem-20120107.jar:" + path +
-                        "libraries/io/netty/netty-all/4.0.23.Final/netty-all-4.0.23.Final.jar:" + path +
-                        "libraries/com/google/guava/guava/17.0/guava-17.0.jar:" + path +
-                        "libraries/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar:" + path +
-                        "libraries/commons-io/commons-io/2.4/commons-io-2.4.jar:" + path +
-                        "libraries/commons-codec/commons-codec/1.9/commons-codec-1.9.jar:" + path +
-                        "libraries/net/java/jinput/jinput/2.0.5/jinput-2.0.5.jar:" + path +
-                        "libraries/net/java/jutils/jutils/1.0.0/jutils-1.0.0.jar:" + path +
-                        "libraries/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar:" + path +
-                        "libraries/com/mojang/authlib/1.5.22/authlib-1.5.22.jar:" + path + "libraries/com/mojang/realms/1.9.8/realms-1.9.8.jar:" +
-                        path + "libraries/org/apache/commons/commons-compress/1.8.1/commons-compress-1.8.1.jar:" + path +
-                        "libraries/org/apache/httpcomponents/httpclient/4.3.3/httpclient-4.3.3.jar:" + path +
-                        "libraries/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar:" + path +
-                        "libraries/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar:" + path +
-                        "libraries/it/unimi/dsi/fastutil/7.0.12_mojang/fastutil-7.0.12_mojang.jar:" + path +
-                        "libraries/org/apache/logging/log4j/log4j-api/2.0-beta9/log4j-api-2.0-beta9.jar:" + path +
-                        "libraries/org/apache/logging/log4j/log4j-core/2.0-beta9/log4j-core-2.0-beta9.jar:" + path +
-                        "libraries/org/lwjgl/lwjgl/lwjgl/2.9.4-nightly-20150209/lwjgl-2.9.4-nightly-20150209.jar:" + path +
-                        "libraries/org/lwjgl/lwjgl/lwjgl_util/2.9.4-nightly-20150209/lwjgl_util-2.9.4-nightly-20150209.jar:" + path +
-                        "versions/1.10.2/1.10.2.jar");
-                cmd.add("net.minecraft.launchwrapper.Launch");
-                cmd.add("--username");
-                cmd.add(username.getText());
-                cmd.add("--version");
-                cmd.add("1.10.2-forge1.10.2-12.18.3.2185");
-                cmd.add("--gameDir");
-                cmd.add(path.substring(0, path.length()-1));
-                cmd.add("--assetsDir");
-                cmd.add(path + "assets");
-                cmd.add("--assetIndex");
-                cmd.add("1.10");
-                cmd.add("--uuid");
-                cmd.add("3fcd6d05a5ac473bb245776a5e89b40b");
-                cmd.add("--accessToken");
-                cmd.add("029a7354fcb142e08d2b7c3023c71260");
-                cmd.add("--userType");
-                cmd.add("legacy");
-                cmd.add("--tweakClass");
-                cmd.add("net.minecraftforge.fml.common.launcher.FMLTweaker");
-                cmd.add("--versionType");
-                cmd.add("Forge");
-
+                cmd.add("-jar");
+                cmd.add(path + "/launcher.jar");
                 ProcessBuilder pb = new ProcessBuilder(cmd);
                 pb.redirectErrorStream(true);
                 pb.redirectOutput(new File("output.log"));
                 Process p = pb.start();
 
-                // wait for Minecraft to be closed to enable textiputs and buttons
+                // wait for Minecraft to be closed to enable textfields and buttons
                 //while (p.isAlive()) {}
 
                 this.javaArguments.setDisable(false);
