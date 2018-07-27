@@ -8,40 +8,36 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minHeight="400.0" minWidth="800.0" styleClass="minecraft" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="300.0" minWidth="800.0" styleClass="minecraft" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
-      <ScrollPane fx:id="grid" fitToHeight="true" fitToWidth="true" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="grid" fitToHeight="true" fitToWidth="true" prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <padding>
             <Insets top="10.0" />
          </padding>
       </ScrollPane>
    </bottom>
    <center>
-      <VBox alignment="CENTER" maxHeight="-Infinity" minHeight="100.0" prefHeight="150.0" prefWidth="100.0"
-            BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" maxHeight="-Infinity" minHeight="100.0" prefHeight="150.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets top="50.0"/>
+            <Insets top="50.0" />
          </BorderPane.margin>
-         <Label fx:id="alert" text="Label"/>
+         <Label fx:id="alert" text="Label" />
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
             <VBox.margin>
-               <Insets top="40.0"/>
+               <Insets top="40.0" />
             </VBox.margin>
             <BorderPane maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <Button fx:id="delete" maxHeight="-Infinity" minWidth="300.0" mnemonicParsing="false"
-                          prefWidth="300.0" styleClass="minecraft-button" text="Yes, I'm engineer"
-                          BorderPane.alignment="CENTER"/>
+                  <Button fx:id="delete" maxHeight="-Infinity" minWidth="300.0" mnemonicParsing="false" prefWidth="300.0" styleClass="minecraft-button" text="Yes, I'm engineer" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <Button fx:id="cancel" minWidth="100.0" mnemonicParsing="false" styleClass="minecraft-button"
-                          text="No !" BorderPane.alignment="CENTER"/>
+                  <Button fx:id="cancel" minWidth="100.0" mnemonicParsing="false" styleClass="minecraft-button" text="No !" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </HBox>
-         <BorderPane prefHeight="200.0" prefWidth="200.0"/>
+         <BorderPane prefHeight="200.0" prefWidth="200.0" />
       </VBox>
    </center>
 </BorderPane>

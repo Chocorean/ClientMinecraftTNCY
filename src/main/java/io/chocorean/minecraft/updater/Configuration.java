@@ -21,13 +21,15 @@ public class Configuration {
     private final URL changelog;
     private final URL styles;
     private final String version;
+    private final String profile;
 
-    private Configuration(String root, String mods, String changelog, String styles, String version, String forge) throws MalformedURLException {
+    private Configuration(String root, String mods, String changelog, String styles, String version, String forge, String profile) throws MalformedURLException {
         this.mods = new URL(root + "/" + mods);
         this.changelog = new URL(root + "/" + changelog);
         this.styles = new URL(root + "/" + styles);
         this.forge = new URL(forge);
         this.version = version;
+        this.profile = profile;
     }
 
     public URL getChangelogUrl() {
@@ -42,6 +44,10 @@ public class Configuration {
         return this.styles;
     }
 
+    public String getProfile() {
+        return this.profile;
+    }
+
     private static Configuration loadFromFileProperties() {
         Properties prop = new Properties();
         InputStream input;
@@ -54,7 +60,8 @@ public class Configuration {
                     prop.getProperty("CHANGELOG_FILE"),
                     prop.getProperty("CSS_FILE"),
                     prop.getProperty("VERSION"),
-                    prop.getProperty("FORGE_URL")
+                    prop.getProperty("FORGE_URL"),
+                    prop.getProperty("PROFILE")
             );
         } catch (IOException e) { e.printStackTrace(); }
         return null;
@@ -63,10 +70,12 @@ public class Configuration {
     @Override
     public String toString() {
         return "Configuration{" +
-                "mods='" + mods + '\'' +
-                ", changelog='" + changelog + '\'' +
-                ", styles='" + styles + '\'' +
-                ", version='" + version + '\'' +
+                "mods='" + this.mods + '\'' +
+                ", changelog='" + this.changelog + '\'' +
+                ", styles='" + this.styles + '\'' +
+                ", version='" + this.version + '\'' +
+                ", profile='" + this.profile + '\'' +
+
                 '}';
     }
 

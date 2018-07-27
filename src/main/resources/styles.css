@@ -47,11 +47,11 @@
     -fx-background-image: url('images/background.png');
 }
 
-.minecraft Label {
+/*.minecraft Label {
     -fx-font-family: "Minecraft";
     -fx-font-size: 16px;
     -fx-text-fill: white;
-}
+}*/
 
 .transparent {
     -fx-background: transparent;

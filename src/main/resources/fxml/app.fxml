@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="621.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.minecraft.updater.controllers.AppController">
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="rootPane" prefHeight="300.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.minecraft.updater.controllers.AppController">
    <BorderPane prefHeight="400.0" prefWidth="621.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <center>
-         <fx:include fx:id="changelog" source="/fxml/changelog.fxml" />
+         <fx:include fx:id="changelog" source="./changelog.fxml" />
       </center>
       <bottom>
-         <fx:include fx:id="bottomPane" source="/fxml/bottomPane.fxml" />
+         <fx:include fx:id="bottomPane" source="./bottomPane.fxml" />
       </bottom>
    </BorderPane>
 </AnchorPane>
