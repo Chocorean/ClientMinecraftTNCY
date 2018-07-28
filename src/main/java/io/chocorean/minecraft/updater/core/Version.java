@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 public class Version {
 
+    private final static Logger LOGGER = Logger.getLogger(Version.class.getName());
     private final HashMap<String, String> properties;
     private final String username;
     private List<Library> libraries;
@@ -57,14 +60,12 @@ public class Version {
         for(Library l: this.libraries)
             array.add(new Gson().toJsonTree(l, Library.class));
         jsonObject.add("minecraftArguments", new JsonPrimitive(this.generateMinecraftArguments()));
-//        jsonObject.add("minimumLauncherVersion", new JsonPrimitive(0));
         jsonObject.add("libraries", array);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(jsonObject);
     }
 
     public static String getUsername(File f) {
-        Gson gson = new Gson();
         try {
             String json = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())), StandardCharsets.UTF_8);
             JsonParser parser = new JsonParser();
@@ -76,7 +77,7 @@ public class Version {
                     .orElse(-1) + 1;
             return params[index];
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return "Player";
     }

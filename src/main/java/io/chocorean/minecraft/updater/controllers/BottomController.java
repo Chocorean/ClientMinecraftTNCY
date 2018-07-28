@@ -38,8 +38,6 @@ import java.util.stream.Collectors;
 
 public class BottomController {
 
-    private final static Logger LOGGER = Logger.getLogger(BottomController.class.getName());
-    private final Configuration conf = Configuration.getInstance();
     @FXML private AnchorPane bottomPane;
     @FXML private TextField minecraftDirectory;
     @FXML private TextField username;
@@ -52,6 +50,8 @@ public class BottomController {
     @FXML private Button installModsButton;
     private File minecraftPath;
     private Stage dialog;
+    private static final Logger LOGGER = Logger.getLogger(BottomController.class.getName());
+    private final Configuration conf = Configuration.getInstance();
 
     public BottomController() {
         this.minecraftPath = this.getDefaultMinecraftDirectory();
@@ -100,8 +100,6 @@ public class BottomController {
 
     private void setOnSaveRealeased() {
         this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
-            String path = this.getMinecraftDirectory().getAbsolutePath();
-            // creating folder if it doesnt exist
             File versionFolder = this.getVersionFile();
             if (!versionFolder.exists())
                 versionFolder.mkdirs();

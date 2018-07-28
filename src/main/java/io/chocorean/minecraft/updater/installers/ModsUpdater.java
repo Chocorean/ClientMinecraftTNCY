@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class ModsUpdater implements Installer<List<Future<File>>> {
 
-    private final static Logger LOGGER = Logger.getLogger(ModsUpdater.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ModsUpdater.class.getName());
     private static final int NB_THREADS = 10;
     private final ProgressBar progressBar;
     private final File modsDirectory;
