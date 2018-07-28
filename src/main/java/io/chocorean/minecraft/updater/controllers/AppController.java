@@ -22,7 +22,7 @@ public class AppController {
     @FXML
     private void initialize() {
 
-        if(!this.checkNetwork())
+        if(!AppController.checkNetwork())
             this.showNoInternet();
     }
 

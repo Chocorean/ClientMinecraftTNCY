@@ -37,6 +37,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class BottomController {
+
+    private final static Logger LOGGER = Logger.getLogger(BottomController.class.getName());
+    private final Configuration conf = Configuration.getInstance();
     @FXML private AnchorPane bottomPane;
     @FXML private TextField minecraftDirectory;
     @FXML private TextField javaArguments;
@@ -48,14 +51,13 @@ public class BottomController {
     @FXML private ProgressBar progression;
     @FXML private Label version;
     @FXML private Button installModsButton;
+
     private File minecraftPath;
     private Stage dialog;
-    private final static Logger LOGGER = Logger.getLogger(BottomController.class.getName());
 
     @FXML
     private void initialize() {
         this.progression.setProgress(0);
-        Configuration conf = Configuration.getInstance();
         this.version.setText(conf.getVersion());
         this.updateMinecraftDirectory(this.getDefaultMinecraftDirectory());
 
@@ -68,74 +70,9 @@ public class BottomController {
                 this.updateMinecraftDirectory(newPath);
         });
 
-        // Event when press 'update client' button
-        this.installForgeButton.setOnMouseReleased(event -> new Thread(() -> {
-            installForgeButton.setDisable(true);
-            installModsButton.setDisable(true);
-            Platform.runLater(() -> setMessage("Downloading forge " + conf.getForgeVersion() + "..."));
-            ForgeInstaller installer = new ForgeInstaller(
-                    conf.getForgeUrl(),
-                    progression,
-                    () -> setMessage("Forge has been installed")
-            );
-            Future<Integer> futurExitValue = installer.install();
-            try {
-                futurExitValue.get();
-                installForgeButton.setDisable(false);
-                installModsButton.setDisable(false);
-            } catch (InterruptedException e) {
-                LOGGER.log(Level.SEVERE, "", e);
-                Thread.currentThread().interrupt();
-            } catch(ExecutionException e) {
-                LOGGER.log(Level.SEVERE, "", e);
-            }
-        }).start());
-
-        // Event when press 'update client' button
-        this.installModsButton.setOnMouseReleased(event -> new Thread(() -> {
-            installForgeButton.setDisable(true);
-            installModsButton.setDisable(true);
-            Platform.runLater(() -> setMessage("Installing mods..."));
-            ModsUpdater updater = new ModsUpdater(this.getModsDirectory(), progression);
-            List<Future<File>> futureInstalled = updater.install();
-            List<File> installed = futureInstalled.stream().map(f -> {
-                try {
-                    return f.get();
-                } catch (InterruptedException e) {
-                    LOGGER.log(Level.SEVERE, "", e);
-                    Thread.currentThread().interrupt();
-                } catch(ExecutionException e) {
-                    LOGGER.log(Level.SEVERE, "", e);
-                }
-                return null;
-            }).collect(Collectors.toList());
-            installForgeButton.setDisable(false);
-            installModsButton.setDisable(false);
-            Platform.runLater(() -> setMessage(installed.size() + " mods have been installed"));
-            this.progression.setProgress(1);
-            List<File> unused = updater.getUnusedMods(this.getModsDirectory(), installed);
-            this.askForUnusedMods(unused);
-        }).start());
-
-        // Event when press 'play' button
-        this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
-            String path = this.getMinecraftDirectory().getAbsolutePath();
-            // creating folder if it doesnt exist
-            File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
-            if (!versionFolder.exists())
-                versionFolder.mkdirs();
-            List<Library> libraries = Libraries.getLibrariesFromResource();
-            Profile profile = new Profile(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
-            BufferedWriter writer;
-            try {
-                writer = new BufferedWriter(new FileWriter(Paths.get(path, "versions", conf.getProfile(), conf.getProfile() + ".json").toFile()));
-                writer.write(profile.toString());
-                Platform.runLater(() -> setMessage("Configuration has been saved"));
-                writer.close();
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "", e);
-            }
-        }).start());
+        this.setOnForgeRealeased();
+        this.setOnModsReleased();
+        this.setOnSaveRealeased();
     }
 
     private void askForUnusedMods(List<File> unusedMods) {
@@ -160,7 +97,84 @@ public class BottomController {
         }
     }
 
-    public void closeDialog() {
+    private void setOnSaveRealeased() {
+        this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
+            String path = this.getMinecraftDirectory().getAbsolutePath();
+            // creating folder if it doesnt exist
+            File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
+            if (!versionFolder.exists())
+                versionFolder.mkdirs();
+            List<Library> libraries = Libraries.getLibrariesFromResource();
+            Profile profile = new Profile(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
+            BufferedWriter writer;
+            try {
+                writer = new BufferedWriter(new FileWriter(Paths.get(
+                        path,
+                        "versions",
+                        conf.getProfile(),
+                        conf.getProfile() + ".json"
+                ).toFile()));
+                writer.write(profile.toString());
+                Platform.runLater(() -> setMessage("Configuration has been saved"));
+                writer.close();
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            }
+        }).start());
+    }
+
+    private void setOnForgeRealeased() {
+        this.installForgeButton.setOnMouseReleased(event -> new Thread(() -> {
+            installForgeButton.setDisable(true);
+            installModsButton.setDisable(true);
+            Platform.runLater(() -> setMessage("Downloading forge " + conf.getForgeVersion() + "..."));
+            ForgeInstaller installer = new ForgeInstaller(
+                    conf.getForgeUrl(),
+                    progression,
+                    () -> setMessage("Forge has been installed")
+            );
+            Future<Integer> futurExitValue = installer.install();
+            try {
+                futurExitValue.get();
+                installForgeButton.setDisable(false);
+                installModsButton.setDisable(false);
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+                Thread.currentThread().interrupt();
+            } catch(ExecutionException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            }
+        }).start());
+    }
+
+    private void setOnModsReleased() {
+        this.installModsButton.setOnMouseReleased(event -> new Thread(() -> {
+            installForgeButton.setDisable(true);
+            installModsButton.setDisable(true);
+            Platform.runLater(() -> setMessage("Installing mods..."));
+            ModsUpdater updater = new ModsUpdater(this.getModsDirectory(), progression);
+            List<Future<File>> futureInstalled = updater.install();
+            List<File> installed = futureInstalled.stream().map(f -> {
+                try {
+                    return f.get();
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.SEVERE, "", e);
+                    Thread.currentThread().interrupt();
+                } catch(ExecutionException e) {
+                    LOGGER.log(Level.SEVERE, "", e);
+                }
+                return null;
+            }).collect(Collectors.toList());
+            installForgeButton.setDisable(false);
+            installModsButton.setDisable(false);
+            Platform.runLater(() -> setMessage(installed.size() + " mods have been installed"));
+            this.progression.setProgress(1);
+            List<File> unused = updater.getUnusedMods(this.getModsDirectory(), installed);
+            this.askForUnusedMods(unused);
+        }).start());
+    }
+
+    void closeDialog() {
         if(this.dialog != null)
             this.dialog.close();
     }
