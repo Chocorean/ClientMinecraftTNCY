@@ -68,6 +68,7 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
 
     private List<Callable<File>> prepareInstallModTask(List<URL> urls, File destination, ProgressBar progress) {
         double increment = 1.0 / urls.size();
+        destination.mkdirs();
         return urls.stream().map(my -> (Callable<File>) () -> {
             File absolutefilePathMod = Paths.get(destination.getAbsolutePath(), new File(my.getFile()).getName()).toFile();
             if (!absolutefilePathMod.exists()) {

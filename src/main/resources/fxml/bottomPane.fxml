@@ -46,7 +46,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <BorderPane.margin>
                         <Insets />
@@ -54,7 +53,6 @@
                     <padding>
                         <Insets left="4.0" right="4.0" />
                     </padding>
-                    <TextField fx:id="javaArguments" maxWidth="1.7976931348623157E308" text="-Xmn1024M -Xmx2048M" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     <Label text="Username" textFill="WHITE" GridPane.rowIndex="1">
                         <font>
                             <Font size="16.0" />
@@ -80,12 +78,7 @@
                         </viewport>
                         <Image url="@../images/folder.png" />
                     </ImageView>
-                    <Label text="Arguments JVM " textFill="WHITE" GridPane.rowIndex="2">
-                        <font>
-                            <Font size="16.0" />
-                        </font>
-                    </Label>
-                    <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="20.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
+                    <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="20.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                         <GridPane.margin>
                             <Insets top="16.0" />
                         </GridPane.margin>

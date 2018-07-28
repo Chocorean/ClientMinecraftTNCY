@@ -1,22 +1,25 @@
 package io.chocorean.minecraft.updater.core;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
-public class Profile {
+public class Version {
 
     private final HashMap<String, String> properties;
     private final String username;
     private List<Library> libraries;
 
-    public Profile(String id, String username, String forgeVersion, List<Library> libraries) {
+    public Version(String id, String username, String forgeVersion, List<Library> libraries) {
         this.properties = new HashMap<>();
         this.libraries = new ArrayList<>();
         this.properties.put("inheritsFrom", forgeVersion);
@@ -48,16 +51,34 @@ public class Profile {
     @Override
     public String toString() {
         JsonObject jsonObject = new JsonObject();
-        Gson gson = new Gson();
         for(Map.Entry<String, String> entry: this.properties.entrySet())
             jsonObject.add(entry.getKey(), new JsonPrimitive(entry.getValue()));
         JsonArray array = new JsonArray();
         for(Library l: this.libraries)
-            array.add(gson.toJsonTree(l, Library.class));
+            array.add(new Gson().toJsonTree(l, Library.class));
         jsonObject.add("minecraftArguments", new JsonPrimitive(this.generateMinecraftArguments()));
-        jsonObject.add("minimumLauncherVersion", new JsonPrimitive(0));
+//        jsonObject.add("minimumLauncherVersion", new JsonPrimitive(0));
         jsonObject.add("libraries", array);
-        return jsonObject.toString();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(jsonObject);
     }
-    
+
+    public static String getUsername(File f) {
+        Gson gson = new Gson();
+        try {
+            String json = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())), StandardCharsets.UTF_8);
+            JsonParser parser = new JsonParser();
+            JsonObject root = parser.parse(json).getAsJsonObject();
+            String[] params = root.get("minecraftArguments").toString().substring(1).split(" ");
+            int index=  IntStream.range(0, params.length)
+                    .filter(i -> params[i].equals("--username"))
+                    .findFirst()
+                    .orElse(-1) + 1;
+            return params[index];
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Player";
+    }
+
 }

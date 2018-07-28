@@ -3,7 +3,7 @@ package io.chocorean.minecraft.updater.controllers;
 import io.chocorean.minecraft.updater.Configuration;
 import io.chocorean.minecraft.updater.core.Libraries;
 import io.chocorean.minecraft.updater.core.Library;
-import io.chocorean.minecraft.updater.core.Profile;
+import io.chocorean.minecraft.updater.core.Version;
 import io.chocorean.minecraft.updater.installers.ForgeInstaller;
 import io.chocorean.minecraft.updater.installers.ModsUpdater;
 import javafx.application.Platform;
@@ -42,7 +42,6 @@ public class BottomController {
     private final Configuration conf = Configuration.getInstance();
     @FXML private AnchorPane bottomPane;
     @FXML private TextField minecraftDirectory;
-    @FXML private TextField javaArguments;
     @FXML private TextField username;
     @FXML private ImageView changeMinecraftDir;
     @FXML private Button installForgeButton;
@@ -51,16 +50,19 @@ public class BottomController {
     @FXML private ProgressBar progression;
     @FXML private Label version;
     @FXML private Button installModsButton;
-
     private File minecraftPath;
     private Stage dialog;
 
+    public BottomController() {
+        this.minecraftPath = this.getDefaultMinecraftDirectory();
+    }
+
     @FXML
     private void initialize() {
+        this.username.setText(Version.getUsername(this.getVersionFile()));
         this.progression.setProgress(0);
         this.version.setText(conf.getVersion());
-        this.updateMinecraftDirectory(this.getDefaultMinecraftDirectory());
-
+        this.updateMinecraftDirectory(this.minecraftPath);
         // Event when press 'change' button
         this.changeMinecraftDir.setOnMouseClicked(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
@@ -69,7 +71,6 @@ public class BottomController {
             if(newPath != null)
                 this.updateMinecraftDirectory(newPath);
         });
-
         this.setOnForgeRealeased();
         this.setOnModsReleased();
         this.setOnSaveRealeased();
@@ -101,19 +102,14 @@ public class BottomController {
         this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
             String path = this.getMinecraftDirectory().getAbsolutePath();
             // creating folder if it doesnt exist
-            File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
+            File versionFolder = this.getVersionFile();
             if (!versionFolder.exists())
                 versionFolder.mkdirs();
             List<Library> libraries = Libraries.getLibrariesFromResource();
-            Profile profile = new Profile(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
+            Version profile = new Version(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
             BufferedWriter writer;
             try {
-                writer = new BufferedWriter(new FileWriter(Paths.get(
-                        path,
-                        "versions",
-                        conf.getProfile(),
-                        conf.getProfile() + ".json"
-                ).toFile()));
+                writer = new BufferedWriter(new FileWriter(this.getVersionFile()));
                 writer.write(profile.toString());
                 Platform.runLater(() -> setMessage("Configuration has been saved"));
                 writer.close();
@@ -121,6 +117,14 @@ public class BottomController {
                 LOGGER.log(Level.SEVERE, "", e);
             }
         }).start());
+    }
+
+    private File getVersionFolder() {
+        return Paths.get(this.getMinecraftDirectory().getAbsolutePath(),"versions", conf.getProfile()).toFile();
+    }
+
+    private File getVersionFile() {
+        return Paths.get(this.getVersionFolder().getAbsolutePath(), conf.getProfile() + ".json").toFile();
     }
 
     private void setOnForgeRealeased() {
