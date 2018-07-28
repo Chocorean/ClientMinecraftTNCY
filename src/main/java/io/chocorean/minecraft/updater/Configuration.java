@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -24,14 +26,15 @@ public class Configuration {
     private final String profile;
     private final String forgeVersion;
 
-    private Configuration(String root, String mods, String changelog, String styles, String version, String forge, String profile, String forgeVersion) throws MalformedURLException {
-        this.mods = new URL(root + "/" + mods);
-        this.changelog = new URL(root + "/" + changelog);
-        this.styles = new URL(root + "/" + styles);
-        this.forge = new URL(forge);
-        this.version = version;
-        this.profile = profile;
-        this.forgeVersion = forgeVersion;
+    private Configuration(Map<String, String> entries) throws MalformedURLException {
+        String root = entries.get("root");
+        this.mods = new URL(root + "/" + entries.get("mods"));
+        this.changelog = new URL(root + "/" + entries.get("changelog"));
+        this.styles = new URL(root + "/" + entries.get("styles"));
+        this.forge = new URL(entries.get("forge"));
+        this.version = entries.get("version");
+        this.profile = entries.get("profile");
+        this.forgeVersion = entries.get("forgeVersion");
     }
 
     public URL getChangelogUrl() {
@@ -56,16 +59,16 @@ public class Configuration {
         try {
             input = Configuration.class.getResourceAsStream(UPDATER_CONFIG_FILE);
             prop.load(input);
-            return new Configuration(
-                    prop.getProperty("ROOT_URL"),
-                    prop.getProperty("MODS_FILE"),
-                    prop.getProperty("CHANGELOG_FILE"),
-                    prop.getProperty("CSS_FILE"),
-                    prop.getProperty("VERSION"),
-                    prop.getProperty("FORGE_URL"),
-                    prop.getProperty("PROFILE"),
-                    prop.getProperty("FORGE_VERSION")
-            );
+            Map<String, String> properties = new HashMap<>();
+            properties.put("root", prop.getProperty("ROOT_URL"));
+            properties.put("changelog", prop.getProperty("CHANGELOG_FILE"));
+            properties.put("mods", prop.getProperty("MODS_FILE"));
+            properties.put("styles", prop.getProperty("CSS_FILE"));
+            properties.put("version", prop.getProperty("VERSION"));
+            properties.put("forge", prop.getProperty("FORGE_URL"));
+            properties.put("profile", prop.getProperty("PROFILE"));
+            properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
+            return new Configuration(properties);
         } catch (IOException e) { e.printStackTrace(); }
         return null;
     }

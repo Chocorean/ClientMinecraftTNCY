@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ModsUpdater implements Installer<List<Future<File>>> {
@@ -21,6 +23,7 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
     private static final int NB_THREADS = 10;
     private final ProgressBar progressBar;
     private final File modsDirectory;
+    private final static Logger LOGGER = Logger.getLogger(ModsUpdater.class.getName());
 
     public ModsUpdater(File modsDirectory, ProgressBar progressBar) {
         this.modsDirectory = modsDirectory;
@@ -54,20 +57,13 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
                 urls.add(new URL(line.trim()));
             tasks.addAll(this.prepareInstallModTask(urls, this.modsDirectory, this.progressBar));
             return service.invokeAll(tasks);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+            Thread.currentThread().interrupt();
         }
         return new ArrayList<>();
-        /*if(futureList != null)
-            return futureList.stream().map(f -> {
-                try {
-                    return f.get();
-                } catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
-                return null;
-            }).collect(Collectors.toList());
-        else
-            return null;
-            */
     }
 
     private List<Callable<File>> prepareInstallModTask(List<URL> urls, File destination, ProgressBar progress) {
@@ -82,7 +78,7 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                     progress.setProgress(progress.getProgress() + increment);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "", e);
                 }
             }
             return absolutefilePathMod;

@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class downloading and running forge installer.
@@ -28,6 +30,8 @@ public class ForgeInstaller implements Installer<Future<?>> {
     private final ProgressBar progressBar;
     private final ExecutorService service;
     private final Runnable cb;
+    private final static Logger LOGGER = Logger.getLogger(ForgeInstaller.class.getName());
+
 
     public ForgeInstaller(URL forgeURL, ProgressBar progressBar, Runnable cb) {
         this.url = forgeURL;
@@ -55,8 +59,11 @@ public class ForgeInstaller implements Installer<Future<?>> {
                 if(p.exitValue() == 0)
                     Platform.runLater(this.cb);
                 return p.exitValue();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+                Thread.currentThread().interrupt();
             }
             return -1;
         });
@@ -72,7 +79,7 @@ public class ForgeInstaller implements Installer<Future<?>> {
         try {
             connection = (HttpURLConnection) url.openConnection();
             contentLength = connection.getContentLength();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { LOGGER.log(Level.SEVERE, "", e); }
         return contentLength;
     }
 

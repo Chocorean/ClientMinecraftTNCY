@@ -23,7 +23,7 @@ public class Libraries {
         this.libraries = libraries;
     }
 
-    public static List<Library> GetLibraries() {
+    public static List<Library> getLibrariesFromResource() {
         Gson gson = new Gson();
         BufferedReader br;
         br = new BufferedReader(new InputStreamReader(Libraries.class.getResourceAsStream("/libraries.json")));
@@ -31,10 +31,4 @@ public class Libraries {
         return result.getLibraries();
     }
 
-    public static void main(String[] args) {
-        List<Library> libraries = Libraries.GetLibraries();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String strJson = gson.toJson(libraries);
-        System.out.println(strJson);
-    }
 }

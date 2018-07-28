@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class BottomController {
@@ -48,6 +50,7 @@ public class BottomController {
     @FXML private Button installModsButton;
     private File minecraftPath;
     private Stage dialog;
+    private final static Logger LOGGER = Logger.getLogger(BottomController.class.getName());
 
     @FXML
     private void initialize() {
@@ -80,8 +83,11 @@ public class BottomController {
                 futurExitValue.get();
                 installForgeButton.setDisable(false);
                 installModsButton.setDisable(false);
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+                Thread.currentThread().interrupt();
+            } catch(ExecutionException e) {
+                LOGGER.log(Level.SEVERE, "", e);
             }
         }).start());
 
@@ -95,7 +101,12 @@ public class BottomController {
             List<File> installed = futureInstalled.stream().map(f -> {
                 try {
                     return f.get();
-                } catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.SEVERE, "", e);
+                    Thread.currentThread().interrupt();
+                } catch(ExecutionException e) {
+                    LOGGER.log(Level.SEVERE, "", e);
+                }
                 return null;
             }).collect(Collectors.toList());
             installForgeButton.setDisable(false);
@@ -113,7 +124,7 @@ public class BottomController {
             File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
             if (!versionFolder.exists())
                 versionFolder.mkdirs();
-            List<Library> libraries = Libraries.GetLibraries();
+            List<Library> libraries = Libraries.getLibrariesFromResource();
             Profile profile = new Profile(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
             BufferedWriter writer;
             try {
@@ -122,7 +133,7 @@ public class BottomController {
                 Platform.runLater(() -> setMessage("Configuration has been saved"));
                 writer.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "", e);
             }
         }).start());
     }
@@ -144,7 +155,7 @@ public class BottomController {
                     this.dialog.showAndWait();
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "", e);
             }
         }
     }
