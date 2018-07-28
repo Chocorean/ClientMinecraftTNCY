@@ -1,32 +1,14 @@
 package io.chocorean.minecraft.updater.controllers;
 
-import io.chocorean.minecraft.updater.Configuration;
-import io.chocorean.minecraft.updater.installers.ForgeInstaller;
-import io.chocorean.minecraft.updater.installers.ModsUpdater;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Controller of the main view

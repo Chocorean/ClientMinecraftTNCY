@@ -1,6 +1,5 @@
 package io.chocorean.minecraft.updater.controllers;
 
-import com.google.gson.Gson;
 import io.chocorean.minecraft.updater.Configuration;
 import io.chocorean.minecraft.updater.core.Libraries;
 import io.chocorean.minecraft.updater.core.Library;
@@ -31,6 +30,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class BottomController {
     @FXML private AnchorPane bottomPane;
@@ -43,6 +45,7 @@ public class BottomController {
     @FXML private Label message;
     @FXML private ProgressBar progression;
     @FXML private Label version;
+    @FXML private Button installModsButton;
     private File minecraftPath;
     private Stage dialog;
 
@@ -64,26 +67,47 @@ public class BottomController {
 
         // Event when press 'update client' button
         this.installForgeButton.setOnMouseReleased(event -> new Thread(() -> {
-            Platform.runLater(() -> setMessage("Downloading forge client..."));
+            installForgeButton.setDisable(true);
+            installModsButton.setDisable(true);
+            Platform.runLater(() -> setMessage("Downloading forge " + conf.getForgeVersion() + "..."));
             ForgeInstaller installer = new ForgeInstaller(
                     conf.getForgeUrl(),
                     progression,
-                    () -> setMessage("Forge is installed !")
+                    () -> setMessage("Forge has been installed")
             );
-            installer.install();
+            Future<Integer> futurExitValue = installer.install();
+            try {
+                futurExitValue.get();
+                installForgeButton.setDisable(false);
+                installModsButton.setDisable(false);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }).start());
+
+        // Event when press 'update client' button
+        this.installModsButton.setOnMouseReleased(event -> new Thread(() -> {
+            installForgeButton.setDisable(true);
+            installModsButton.setDisable(true);
             Platform.runLater(() -> setMessage("Installing mods..."));
             ModsUpdater updater = new ModsUpdater(this.getModsDirectory(), progression);
-            List<File> installed = updater.install();
-            Platform.runLater(() -> setMessage("Mods installed !"));
+            List<Future<File>> futureInstalled = updater.install();
+            List<File> installed = futureInstalled.stream().map(f -> {
+                try {
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
+                return null;
+            }).collect(Collectors.toList());
+            installForgeButton.setDisable(false);
+            installModsButton.setDisable(false);
+            Platform.runLater(() -> setMessage(installed.size() + " mods have been installed"));
             this.progression.setProgress(1);
             List<File> unused = updater.getUnusedMods(this.getModsDirectory(), installed);
             this.askForUnusedMods(unused);
-
         }).start());
 
         // Event when press 'play' button
         this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
-            Gson gson = new Gson();
             String path = this.getMinecraftDirectory().getAbsolutePath();
             // creating folder if it doesnt exist
             File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
@@ -94,7 +118,8 @@ public class BottomController {
             BufferedWriter writer;
             try {
                 writer = new BufferedWriter(new FileWriter(Paths.get(path, "versions", conf.getProfile(), conf.getProfile() + ".json").toFile()));
-                writer.write(gson.toJson(profile));
+                writer.write(profile.toString());
+                Platform.runLater(() -> setMessage("Configuration has been saved"));
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,7 +180,6 @@ public class BottomController {
     private File getMinecraftDirectory() {
         return this.minecraftPath;
     }
-
 
     private File getModsDirectory() {
         return Paths.get(this.minecraftPath.getAbsolutePath(), "mods").toFile();

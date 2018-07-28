@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class ModsUpdater implements Installer<List<File>> {
+public class ModsUpdater implements Installer<List<Future<File>>> {
 
     private static final int NB_THREADS = 10;
     private final ProgressBar progressBar;
@@ -27,7 +27,6 @@ public class ModsUpdater implements Installer<List<File>> {
         this.progressBar = progressBar;
     }
 
-
     public List<File> getUnusedMods(File modsDirectory, List<File> installed) {
         return Arrays.stream(Objects.requireNonNull(modsDirectory.listFiles()))
                 .filter(f -> !installed.contains(f) && f.getName().endsWith(".jar"))
@@ -35,11 +34,10 @@ public class ModsUpdater implements Installer<List<File>> {
     }
 
     @Override
-    public List<File> install() {
+    public List<Future<File>> install() {
         this.progressBar.setProgress(0);
         ExecutorService service = Executors.newFixedThreadPool(NB_THREADS);
         List<Callable<File>> tasks = new ArrayList<>();
-        List<Future<File>> futureList = null;
         try {
             Configuration config = Configuration.getInstance();
             URL modsURL = config.getModsUrl();
@@ -55,11 +53,12 @@ public class ModsUpdater implements Installer<List<File>> {
             while ((line = br.readLine()) != null)
                 urls.add(new URL(line.trim()));
             tasks.addAll(this.prepareInstallModTask(urls, this.modsDirectory, this.progressBar));
-            futureList = service.invokeAll(tasks);
+            return service.invokeAll(tasks);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        if(futureList != null)
+        return new ArrayList<>();
+        /*if(futureList != null)
             return futureList.stream().map(f -> {
                 try {
                     return f.get();
@@ -68,6 +67,7 @@ public class ModsUpdater implements Installer<List<File>> {
             }).collect(Collectors.toList());
         else
             return null;
+            */
     }
 
     private List<Callable<File>> prepareInstallModTask(List<URL> urls, File destination, ProgressBar progress) {

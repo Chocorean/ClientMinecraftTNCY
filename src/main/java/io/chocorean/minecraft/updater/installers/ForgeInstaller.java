@@ -15,13 +15,14 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Class downloading and running forge installer.
  *
  * @author mcdostone
  */
-public class ForgeInstaller implements Installer<Integer> {
+public class ForgeInstaller implements Installer<Future<?>> {
 
     private final URL url;
     private final ProgressBar progressBar;
@@ -36,9 +37,9 @@ public class ForgeInstaller implements Installer<Integer> {
     }
 
     @Override
-    public Integer install() {
+    public Future<Integer> install() {
         this.progressBar.setProgress(0);
-        this.service.submit(() -> {
+        return this.service.submit(() -> {
             File forgeFile = Paths.get(System.getProperty("java.io.tmpdir"), new File(this.url.toString()).getName()).toFile();
             try {
                 ReadableByteChannel rbc = new CallbackByteChannel(
@@ -53,11 +54,12 @@ public class ForgeInstaller implements Installer<Integer> {
                 p.waitFor();
                 if(p.exitValue() == 0)
                     Platform.runLater(this.cb);
+                return p.exitValue();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+            return -1;
         });
-        return 0;
     }
 
     /**

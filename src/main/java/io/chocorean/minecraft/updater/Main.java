@@ -22,6 +22,8 @@ public class Main extends Application {
         primaryStage.setTitle("Minecraft Updater for TNCY");
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.setScene(new Scene(root, 1200, 800));
+        primaryStage.setMinWidth(root.minWidth(-1));
+        primaryStage.setMinHeight(root.minHeight(-1));
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
             Platform.exit();
