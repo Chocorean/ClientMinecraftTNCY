@@ -2,6 +2,8 @@ package io.chocorean.minecraft.updater.controllers;
 
 import com.google.gson.Gson;
 import io.chocorean.minecraft.updater.Configuration;
+import io.chocorean.minecraft.updater.core.Libraries;
+import io.chocorean.minecraft.updater.core.Library;
 import io.chocorean.minecraft.updater.core.Profile;
 import io.chocorean.minecraft.updater.installers.ForgeInstaller;
 import io.chocorean.minecraft.updater.installers.ModsUpdater;
@@ -84,10 +86,11 @@ public class BottomController {
             Gson gson = new Gson();
             String path = this.getMinecraftDirectory().getAbsolutePath();
             // creating folder if it doesnt exist
-            File versionFolder = Paths.get(path,"versions", "1.10.2-TNCY").toFile();
+            File versionFolder = Paths.get(path,"versions", conf.getProfile()).toFile();
             if (!versionFolder.exists())
                 versionFolder.mkdirs();
-            Profile profile = new Profile(this.username.getText());
+            List<Library> libraries = Libraries.GetLibraries();
+            Profile profile = new Profile(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
             BufferedWriter writer;
             try {
                 writer = new BufferedWriter(new FileWriter(Paths.get(path, "versions", conf.getProfile(), conf.getProfile() + ".json").toFile()));

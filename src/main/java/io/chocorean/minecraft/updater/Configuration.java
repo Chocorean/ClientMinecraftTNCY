@@ -22,14 +22,16 @@ public class Configuration {
     private final URL styles;
     private final String version;
     private final String profile;
+    private final String forgeVersion;
 
-    private Configuration(String root, String mods, String changelog, String styles, String version, String forge, String profile) throws MalformedURLException {
+    private Configuration(String root, String mods, String changelog, String styles, String version, String forge, String profile, String forgeVersion) throws MalformedURLException {
         this.mods = new URL(root + "/" + mods);
         this.changelog = new URL(root + "/" + changelog);
         this.styles = new URL(root + "/" + styles);
         this.forge = new URL(forge);
         this.version = version;
         this.profile = profile;
+        this.forgeVersion = forgeVersion;
     }
 
     public URL getChangelogUrl() {
@@ -61,7 +63,8 @@ public class Configuration {
                     prop.getProperty("CSS_FILE"),
                     prop.getProperty("VERSION"),
                     prop.getProperty("FORGE_URL"),
-                    prop.getProperty("PROFILE")
+                    prop.getProperty("PROFILE"),
+                    prop.getProperty("FORGE_VERSION")
             );
         } catch (IOException e) { e.printStackTrace(); }
         return null;
@@ -75,7 +78,6 @@ public class Configuration {
                 ", styles='" + this.styles + '\'' +
                 ", version='" + this.version + '\'' +
                 ", profile='" + this.profile + '\'' +
-
                 '}';
     }
 
@@ -91,5 +93,9 @@ public class Configuration {
 
     public URL getForgeUrl() {
         return this.forge;
+    }
+
+    public String getForgeVersion() {
+        return this.forgeVersion;
     }
 }

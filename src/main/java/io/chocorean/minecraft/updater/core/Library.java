@@ -1,27 +1,69 @@
 package io.chocorean.minecraft.updater.core;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Type;
+import java.util.List;
 
-public class Library implements JsonSerializer<Library> {
+public class Library {
 
+    @SerializedName("name")
+    @Expose
     private String name;
+    @SerializedName("url")
+    @Expose
     private String url;
+    @SerializedName("serverreq")
+    @Expose
+    private boolean serverreq;
+    @SerializedName("checksums")
+    @Expose
+    private List<String> checksums = null;
+    @SerializedName("clientreq")
+    @Expose
+    private boolean clientreq;
 
-    public Library(String name, String url) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    @Override
-    public JsonElement serialize(Library library, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject object = new JsonObject();
-        object.addProperty("name", this.name);
-        object.addProperty("url", this.url);
-        return object;
+    public boolean isServerreq() {
+        return serverreq;
+    }
+
+    public void setServerreq(boolean serverreq) {
+        this.serverreq = serverreq;
+    }
+
+    public List<String> getChecksums() {
+        return checksums;
+    }
+
+    public void setChecksums(List<String> checksums) {
+        this.checksums = checksums;
+    }
+
+    public boolean isClientreq() {
+        return clientreq;
+    }
+
+    public void setClientreq(boolean clientreq) {
+        this.clientreq = clientreq;
+    }
+
+    public String toString() {
+        return this.name + ", " + this.url;
     }
 }
