@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class ForgeInstaller implements Installer<Future<?>> {
 
-    private final static Logger LOGGER = Logger.getLogger(ForgeInstaller.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ForgeInstaller.class.getName());
     private final URL url;
     private final ProgressBar progressBar;
     private final ExecutorService service;

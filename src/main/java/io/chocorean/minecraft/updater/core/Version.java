@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class Version {
 
-    private final static Logger LOGGER = Logger.getLogger(Version.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Version.class.getName());
     private final HashMap<String, String> properties;
     private final String username;
     private List<Library> libraries;
