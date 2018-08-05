@@ -103,7 +103,9 @@
             </BorderPane>
         </center>
     </BorderPane>
-    <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <AnchorPane maxWidth="1.7976931348623157E308" styleClass="notification-menu" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <Label fx:id="version" alignment="CENTER" contentDisplay="RIGHT" maxHeight="20.0" styleClass="version" stylesheets="@../styles.css" text="Label" textAlignment="CENTER" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
     </AnchorPane>
+
+    <fx:include maxHeight="40.0" prefHeight="40.0" source="./notificationMenu.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
 </AnchorPane>

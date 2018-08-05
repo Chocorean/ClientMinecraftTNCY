@@ -1,7 +1,10 @@
 package io.chocorean.minecraft.updater;
 
 
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
+import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,8 +19,11 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
+    public static HostServicesDelegate hostService;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
+        hostService = HostServicesFactory.getInstance(this);
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/app.fxml"));
         primaryStage.setTitle("Minecraft Updater for TNCY");
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));

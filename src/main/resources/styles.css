@@ -22,6 +22,7 @@
     -fx-cursor: hand;
 }
 
+
 .save-button {
     -fx-background-image: none;
     -fx-background-color: #31b23d;
@@ -110,11 +111,39 @@ scroll-pane > .viewport {
     -fx-max-height: 1px;
     -fx-border-insets: 0;
     -fx-background-insets: 1 0 1 0;
-    -fx-background-color: green;
+    -fx-background-color: #008500;
 }
 
 .nope {
     -fx-background-image: url("images/nope.gif");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
+}
+
+.notification-menu {
+    -fx-background-color: black;
+}
+
+.notification-menu Label {
+    -fx-font-family: "Minecraft";
+    -fx-font-size: 14px;
+    -fx-text-fill: grey;
+}
+
+.notification-menu .notification-close:hover {
+    -fx-text-fill: white;
+}
+
+Hyperlink {
+    -fx-border-color: transparent;
+    -fx-text-fill: #37abff;
+}
+
+Hyperlink:pressed:visited {
+    -fx-text-fill: #37abff;
+}
+
+Hyperlink:hover {
+    -fx-underline: true;
+    -fx-text-fill: #37abff;
 }

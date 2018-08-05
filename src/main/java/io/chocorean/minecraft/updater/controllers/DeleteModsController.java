@@ -31,7 +31,12 @@ public class DeleteModsController {
 
     @FXML
     private void initialize() {
-        this.alert.setText(unusedMods.size() + " mods are unused, do you want to delete them?");
+        String message = null;
+        if(this.unusedMods.size() == 1)
+            message = unusedMods.size() + " mod is unused, do you want to delete it?";
+        else
+            message = unusedMods.size() + " mods are unused, do you want to delete them?";
+        this.alert.setText(message);
         this.grid.setContent(this.generateVBoxList());
         this.delete.setOnMouseReleased(event -> this.deleteUnusedMods());
         this.cancel.setOnMouseReleased(event -> this.appController.closeDialog());

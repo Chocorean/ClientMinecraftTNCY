@@ -1,6 +1,7 @@
 package io.chocorean.minecraft.updater.controllers;
 
 import io.chocorean.minecraft.updater.Configuration;
+import io.chocorean.minecraft.updater.Utils;
 import io.chocorean.minecraft.updater.core.Libraries;
 import io.chocorean.minecraft.updater.core.Library;
 import io.chocorean.minecraft.updater.core.Version;
@@ -54,7 +55,7 @@ public class BottomController {
     private final Configuration conf = Configuration.getInstance();
 
     public BottomController() {
-        this.minecraftPath = this.getDefaultMinecraftDirectory();
+        this.minecraftPath = Utils.getDefaultMinecraftDirectory();
     }
 
     @FXML
@@ -188,20 +189,6 @@ public class BottomController {
 
     private void setMessage(String msg) {
         this.message.setText(msg);
-    }
-
-    private File getDefaultMinecraftDirectory() {
-        String minecraftDir = ".minecraft";
-        String userHomeDir = System.getProperty("user.home", ".");
-        String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-        File targetDir;
-        if (osType.contains("win") && System.getenv("APPDATA") != null)
-            targetDir = new File(System.getenv("APPDATA"), minecraftDir);
-        else if (osType.contains("mac"))
-            targetDir = Paths.get(userHomeDir, "Library","Application Support", "minecraft").toFile();
-        else
-            targetDir = new File(userHomeDir, minecraftDir);
-        return targetDir;
     }
 
     private File getMinecraftDirectory() {

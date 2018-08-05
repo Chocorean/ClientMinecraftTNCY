@@ -18,39 +18,42 @@ public class Configuration {
 
     private static final String UPDATER_CONFIG_FILE = "/updater.properties";
     private static Configuration config;
-    private final URL forge;
-    private final URL mods;
-    private final URL changelog;
-    private final URL styles;
-    private final String version;
-    private final String profile;
-    private final String forgeVersion;
+    private final Map<String, String> properties;
 
-    private Configuration(Map<String, String> entries) throws MalformedURLException {
-        String root = entries.get("root");
-        this.mods = new URL(root + "/" + entries.get("mods"));
-        this.changelog = new URL(root + "/" + entries.get("changelog"));
-        this.styles = new URL(root + "/" + entries.get("styles"));
-        this.forge = new URL(entries.get("forge"));
-        this.version = entries.get("version");
-        this.profile = entries.get("profile");
-        this.forgeVersion = entries.get("forgeVersion");
+
+    private Configuration(Map<String, String> properties) {
+        this.properties = properties;
     }
 
     public URL getChangelogUrl() {
-        return this.changelog;
+        try {
+            return new URL(this.properties.get("root") + "/" +  this.properties.get("changelog"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public URL getModsUrl() {
-        return this.mods;
+        try {
+            return new URL(this.properties.get("root") + "/mods.txt");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public URL getStylesUrl() {
-        return this.styles;
+        try {
+            return new URL(this.properties.get("root") + "/" + properties.get("styles"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getProfile() {
-        return this.profile;
+        return this.properties.get("profile");
     }
 
     private static Configuration loadFromFileProperties() {
@@ -68,6 +71,7 @@ public class Configuration {
             properties.put("forge", prop.getProperty("FORGE_URL"));
             properties.put("profile", prop.getProperty("PROFILE"));
             properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
+            properties.put("githubUrl", prop.getProperty("GITHUB_URL"));
             return new Configuration(properties);
         } catch (IOException e) { e.printStackTrace(); }
         return null;
@@ -76,11 +80,12 @@ public class Configuration {
     @Override
     public String toString() {
         return "Configuration{" +
-                "mods='" + this.mods + '\'' +
-                ", changelog='" + this.changelog + '\'' +
-                ", styles='" + this.styles + '\'' +
-                ", version='" + this.version + '\'' +
-                ", profile='" + this.profile + '\'' +
+                "mods='" + this.getModsUrl() + '\'' +
+                ", changelog='" + this.getChangelogUrl() + '\'' +
+                ", styles='" + this.getForgeUrl() + '\'' +
+                ", version='" + this.getVersion() + '\'' +
+                ", profile='" + this.getProfile() + '\'' +
+                ", github='" + this.getGithubUrl() + '\'' +
                 '}';
     }
 
@@ -91,14 +96,23 @@ public class Configuration {
     }
 
     public String getVersion() {
-        return this.version;
+        return this.properties.get("version");
     }
 
     public URL getForgeUrl() {
-        return this.forge;
+        try {
+            return new URL(this.properties.get("forge"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getForgeVersion() {
-        return this.forgeVersion;
+        return this.properties.get("forgeVersion");
+    }
+
+    public String getGithubUrl() {
+        return this.properties.get("githubUrl");
     }
 }
