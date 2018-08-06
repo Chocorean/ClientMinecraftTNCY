@@ -17,8 +17,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
-import javax.rmi.CORBA.Util;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class NotificationController {
 
@@ -33,7 +36,7 @@ public class NotificationController {
         this.displayed = false;
         this.config = Configuration.getInstance();
         this.notificationCenter = new NotificationCenter();
-        this.notificationCenter.register(new NewClientNotification(Main.hostService, config.getGithubUrl()));
+        this.notificationCenter.register(new NewClientNotification(Main.hostService, config.getVersionUrl(), config.getVersion()));
         this.notificationCenter.register(new NewModsNotification(Utils.getDefaultModsDirectory().getAbsolutePath()));
     }
 
@@ -52,7 +55,8 @@ public class NotificationController {
                 this.displayed = false;
             }
         });
-        Platform.runLater(() -> displayNotifications(notificationCenter.collectNotifications()));
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.schedule(() -> Platform.runLater(() -> displayNotifications(notificationCenter.collectNotifications())), 3, TimeUnit.SECONDS);
         this.notificationMessage.setVisited(false);
     }
 
@@ -60,11 +64,11 @@ public class NotificationController {
         this.notificationMessage.setText(n.getMessage());
         this.notificationMessage.setOnMouseClicked(n.getEvent());
         if(!this.displayed) {
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(666), this.notificationMenu);
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(1000), notificationMenu);
             slideIn.setInterpolator(Interpolator.EASE_BOTH);
             slideIn.setByY(-(notificationMenu.getPrefHeight() + 20));
             slideIn.play();
-            this.displayed = true;
+            displayed = true;
         }
     }
 

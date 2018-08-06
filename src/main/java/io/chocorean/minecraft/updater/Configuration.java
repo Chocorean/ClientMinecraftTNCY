@@ -70,6 +70,7 @@ public class Configuration {
             properties.put("version", prop.getProperty("VERSION"));
             properties.put("forge", prop.getProperty("FORGE_URL"));
             properties.put("profile", prop.getProperty("PROFILE"));
+            properties.put("versionUrl", prop.getProperty("VERSION_URL"));
             properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
             properties.put("githubUrl", prop.getProperty("GITHUB_URL"));
             return new Configuration(properties);
@@ -114,5 +115,9 @@ public class Configuration {
 
     public String getGithubUrl() {
         return this.properties.get("githubUrl");
+    }
+
+    public String getVersionUrl() {
+        return this.properties.get("versionUrl");
     }
 }
