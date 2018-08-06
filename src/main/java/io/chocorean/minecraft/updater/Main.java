@@ -1,7 +1,6 @@
 package io.chocorean.minecraft.updater;
 
 
-import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
