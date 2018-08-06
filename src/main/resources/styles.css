@@ -22,6 +22,20 @@
     -fx-cursor: hand;
 }
 
+
+.save-button {
+    -fx-background-image: none;
+    -fx-background-color: #31b23d;
+    -fx-border-color: #93ea9a #278e43 #278e43 #93ea9a;
+    -fx-border-width: 4;
+}
+.save-button:hover {
+    -fx-background-image: none !important;
+    -fx-border-color: #c9f5cd #3bc765 #3bc765 #c9f5cd !important;
+    -fx-background-color: #4ad95c !important;
+    -fx-text-fill: #FFFFFF !important;
+}
+
 .minecraft-button:hover {
     -fx-background-image: url('images/button_active_center.png');
     -fx-border-color: #BDC6FF #59639A #59639A #BDC6FF;
@@ -30,6 +44,12 @@
 
 .minecraft-button:pressed {
     -fx-border-width: 1 1 2 1;
+    -fx-padding: 4 1 2 4;
+}
+
+.save-button:pressed {
+    -fx-border-width: 2 2 3 2;
+    -fx-padding: 4 1 2 4;
 }
 
 .minecraft-button Text {
@@ -45,12 +65,6 @@
 .minecraft {
     -fx-background-color: black;
     -fx-background-image: url('images/background.png');
-}
-
-.minecraft Label {
-    -fx-font-family: "Minecraft";
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
 }
 
 .transparent {
@@ -97,11 +111,39 @@ scroll-pane > .viewport {
     -fx-max-height: 1px;
     -fx-border-insets: 0;
     -fx-background-insets: 1 0 1 0;
-    -fx-background-color: green;
+    -fx-background-color: #008500;
 }
 
 .nope {
     -fx-background-image: url("images/nope.gif");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
+}
+
+.notification-menu {
+    -fx-background-color: black;
+}
+
+.notification-menu Label {
+    -fx-font-family: "Minecraft";
+    -fx-font-size: 14px;
+    -fx-text-fill: grey;
+}
+
+.notification-menu .notification-close:hover {
+    -fx-text-fill: white;
+}
+
+Hyperlink {
+    -fx-border-color: transparent;
+    -fx-text-fill: #37abff;
+}
+
+Hyperlink:pressed:visited {
+    -fx-text-fill: #37abff;
+}
+
+Hyperlink:hover {
+    -fx-underline: true;
+    -fx-text-fill: #37abff;
 }

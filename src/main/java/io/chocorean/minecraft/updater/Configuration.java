@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Configuration of the app.
@@ -14,32 +18,45 @@ import java.util.Properties;
  */
 public class Configuration {
 
+    private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
     private static final String UPDATER_CONFIG_FILE = "/updater.properties";
     private static Configuration config;
-    private final URL forge;
-    private final URL mods;
-    private final URL changelog;
-    private final URL styles;
-    private final String version;
+    private final Map<String, String> properties;
 
-    private Configuration(String root, String mods, String changelog, String styles, String version, String forge) throws MalformedURLException {
-        this.mods = new URL(root + "/" + mods);
-        this.changelog = new URL(root + "/" + changelog);
-        this.styles = new URL(root + "/" + styles);
-        this.forge = new URL(forge);
-        this.version = version;
+
+    private Configuration(Map<String, String> properties) {
+        this.properties = properties;
     }
 
     public URL getChangelogUrl() {
-        return this.changelog;
+        try {
+            return new URL(this.properties.get("root") + "/" +  this.properties.get("changelog"));
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
+        return null;
     }
 
     public URL getModsUrl() {
-        return this.mods;
+        try {
+            return new URL(this.properties.get("root") + "/mods.txt");
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
+        return null;
     }
 
     public URL getStylesUrl() {
-        return this.styles;
+        try {
+            return new URL(this.properties.get("root") + "/" + properties.get("styles"));
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
+        return null;
+    }
+
+    public String getProfile() {
+        return this.properties.get("profile");
     }
 
     private static Configuration loadFromFileProperties() {
@@ -48,14 +65,18 @@ public class Configuration {
         try {
             input = Configuration.class.getResourceAsStream(UPDATER_CONFIG_FILE);
             prop.load(input);
-            return new Configuration(
-                    prop.getProperty("ROOT_URL"),
-                    prop.getProperty("MODS_FILE"),
-                    prop.getProperty("CHANGELOG_FILE"),
-                    prop.getProperty("CSS_FILE"),
-                    prop.getProperty("VERSION"),
-                    prop.getProperty("FORGE_URL")
-            );
+            Map<String, String> properties = new HashMap<>();
+            properties.put("root", prop.getProperty("ROOT_URL"));
+            properties.put("changelog", prop.getProperty("CHANGELOG_FILE"));
+            properties.put("mods", prop.getProperty("MODS_FILE"));
+            properties.put("styles", prop.getProperty("CSS_FILE"));
+            properties.put("version", prop.getProperty("VERSION"));
+            properties.put("forge", prop.getProperty("FORGE_URL"));
+            properties.put("profile", prop.getProperty("PROFILE"));
+            properties.put("versionUrl", prop.getProperty("VERSION_URL"));
+            properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
+            properties.put("githubUrl", prop.getProperty("GITHUB_URL"));
+            return new Configuration(properties);
         } catch (IOException e) { e.printStackTrace(); }
         return null;
     }
@@ -63,10 +84,12 @@ public class Configuration {
     @Override
     public String toString() {
         return "Configuration{" +
-                "mods='" + mods + '\'' +
-                ", changelog='" + changelog + '\'' +
-                ", styles='" + styles + '\'' +
-                ", version='" + version + '\'' +
+                "mods='" + this.getModsUrl() + '\'' +
+                ", changelog='" + this.getChangelogUrl() + '\'' +
+                ", styles='" + this.getForgeUrl() + '\'' +
+                ", version='" + this.getVersion() + '\'' +
+                ", profile='" + this.getProfile() + '\'' +
+                ", github='" + this.getGithubUrl() + '\'' +
                 '}';
     }
 
@@ -77,10 +100,27 @@ public class Configuration {
     }
 
     public String getVersion() {
-        return this.version;
+        return this.properties.get("version");
     }
 
     public URL getForgeUrl() {
-        return this.forge;
+        try {
+            return new URL(this.properties.get("forge"));
+        } catch (MalformedURLException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
+        return null;
+    }
+
+    public String getForgeVersion() {
+        return this.properties.get("forgeVersion");
+    }
+
+    public String getGithubUrl() {
+        return this.properties.get("githubUrl");
+    }
+
+    public String getVersionUrl() {
+        return this.properties.get("versionUrl");
     }
 }

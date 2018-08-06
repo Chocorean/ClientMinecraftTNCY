@@ -4,4 +4,6 @@ src/META-INF/
 *.iml
 target
 mods.txt
-*.jar.log
+*.jar.loglogs
+output
+*.log

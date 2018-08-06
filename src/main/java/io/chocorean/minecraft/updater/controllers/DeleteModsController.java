@@ -22,16 +22,21 @@ public class DeleteModsController {
     @FXML private ScrollPane grid;
     @FXML private Button delete;
     @FXML private Button cancel;
-    @FXML private final AppController appController;
+    @FXML private final BottomController appController;
 
-    public DeleteModsController(List<File> unusedMods, AppController controller) {
+    public DeleteModsController(List<File> unusedMods, BottomController controller) {
         this.unusedMods = unusedMods;
         this.appController = controller;
     }
 
     @FXML
     private void initialize() {
-        this.alert.setText(unusedMods.size() + " mods are unused, do you want to delete them?");
+        String message = null;
+        if(this.unusedMods.size() == 1)
+            message = unusedMods.size() + " mod is unused, do you want to delete it?";
+        else
+            message = unusedMods.size() + " mods are unused, do you want to delete them?";
+        this.alert.setText(message);
         this.grid.setContent(this.generateVBoxList());
         this.delete.setOnMouseReleased(event -> this.deleteUnusedMods());
         this.cancel.setOnMouseReleased(event -> this.appController.closeDialog());

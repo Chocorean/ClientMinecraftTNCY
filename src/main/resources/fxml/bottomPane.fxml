@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="bottomPane" maxHeight="270.0" minHeight="270.0" minWidth="700.0" prefHeight="270.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.minecraft.updater.controllers.BottomController">
+    <BorderPane styleClass="minecraft" stylesheets="@../styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <bottom>
+            <BorderPane maxHeight="60.0" minHeight="60.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="60.0" prefWidth="714.0">
+                <bottom>
+                    <ProgressBar fx:id="progression" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="14.0" progress="0.65" stylesheets="@../styles.css" BorderPane.alignment="CENTER" />
+                </bottom>
+            <center>
+                    <Label fx:id="message" alignment="CENTER_RIGHT" contentDisplay="CENTER" textFill="#ffd000" BorderPane.alignment="CENTER">
+                  <font>
+                     <Font size="14.0" />
+                  </font></Label>
+            </center>
+            </BorderPane>
+        </bottom>
+        <center>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <center>
+                <GridPane alignment="CENTER" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="160.0" prefWidth="160.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="600.0" prefWidth="450.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <BorderPane.margin>
+                        <Insets />
+                    </BorderPane.margin>
+                    <padding>
+                        <Insets left="4.0" right="4.0" />
+                    </padding>
+                    <Label text="Username" textFill="WHITE" GridPane.rowIndex="1">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="username" minWidth="240.0" text="Player" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label text="Répertoire du jeu" textFill="WHITE">
+                        <font>
+                            <Font size="16.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="minecraftDirectory" editable="false" prefHeight="26.0" prefWidth="357.0" GridPane.columnIndex="1" />
+                    <Label GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                    <ImageView fx:id="changeMinecraftDir" fitHeight="50.0" fitWidth="20.0" preserveRatio="true" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                        <GridPane.margin>
+                            <Insets />
+                        </GridPane.margin>
+                        <viewport>
+                            <Rectangle2D />
+                        </viewport>
+                        <Image url="@../images/folder.png" />
+                    </ImageView>
+                    <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="20.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                        <GridPane.margin>
+                            <Insets top="16.0" />
+                        </GridPane.margin>
+                        <Button fx:id="saveButton" defaultButton="true" minWidth="120.0" mnemonicParsing="false" prefWidth="120.0" stylesheets="@../styles.css" text="Save" textFill="WHITE" HBox.hgrow="NEVER">
+                            <styleClass>
+                                <String fx:value="minecraft-button" />
+                                <String fx:value="save-button" />
+                            </styleClass>
+                        </Button>
+                        <Button fx:id="installForgeButton" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" prefWidth="200.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install forge" textFill="WHITE" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="installModsButton" maxWidth="1.7976931348623157E308" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install mods" textFill="WHITE">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Button>
+                    </HBox>
+                </GridPane>
+            </center>
+            <BorderPane.margin>
+               <Insets top="10.0" />
+            </BorderPane.margin>
+            </BorderPane>
+        </center>
+    </BorderPane>
+    <AnchorPane maxWidth="1.7976931348623157E308" styleClass="notification-menu" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Label fx:id="version" alignment="CENTER" contentDisplay="RIGHT" maxHeight="20.0" styleClass="version" stylesheets="@../styles.css" text="Label" textAlignment="CENTER" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+    </AnchorPane>
+
+    <fx:include maxHeight="40.0" prefHeight="40.0" source="./notificationMenu.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+</AnchorPane>

@@ -15,14 +15,18 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class downloading and running forge installer.
  *
  * @author mcdostone
  */
-public class ForgeInstaller implements Installer<Integer> {
+public class ForgeInstaller implements Installer<Future<?>> {
 
+    private static final Logger LOGGER = Logger.getLogger(ForgeInstaller.class.getName());
     private final URL url;
     private final ProgressBar progressBar;
     private final ExecutorService service;
@@ -36,9 +40,9 @@ public class ForgeInstaller implements Installer<Integer> {
     }
 
     @Override
-    public Integer install() {
+    public Future<Integer> install() {
         this.progressBar.setProgress(0);
-        this.service.submit(() -> {
+        return this.service.submit(() -> {
             File forgeFile = Paths.get(System.getProperty("java.io.tmpdir"), new File(this.url.toString()).getName()).toFile();
             try {
                 ReadableByteChannel rbc = new CallbackByteChannel(
@@ -53,11 +57,15 @@ public class ForgeInstaller implements Installer<Integer> {
                 p.waitFor();
                 if(p.exitValue() == 0)
                     Platform.runLater(this.cb);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                return p.exitValue();
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+                Thread.currentThread().interrupt();
             }
+            return -1;
         });
-        return 0;
     }
 
     /**
@@ -70,7 +78,7 @@ public class ForgeInstaller implements Installer<Integer> {
         try {
             connection = (HttpURLConnection) url.openConnection();
             contentLength = connection.getContentLength();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { LOGGER.log(Level.SEVERE, "", e); }
         return contentLength;
     }
 

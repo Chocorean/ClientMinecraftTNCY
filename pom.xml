@@ -5,7 +5,14 @@
   <groupId>io.chocorean</groupId>
   <artifactId>minecraft-updater</artifactId>
   <version>1.2</version>
-  <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
+    <packaging>jar</packaging>
 
   <name>minecraft-updater</name>
 
