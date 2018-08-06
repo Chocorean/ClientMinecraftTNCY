@@ -1,20 +1,23 @@
 package io.chocorean.minecraft.updater.core.notifications;
 
-import com.sun.javafx.application.HostServicesDelegate;
 import javafx.event.EventHandler;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NewClientNotification implements Notification {
 
-    private final HostServicesDelegate h;
+    private static final Logger LOGGER = Logger.getLogger(NewClientNotification.class.getName());
     private final String urlVersion;
     private final String actualVersion;
 
-    public NewClientNotification(HostServicesDelegate h, String urlVersion, String actualVersion) {
-        this.h = h;
+    public NewClientNotification(String urlVersion, String actualVersion) {
         this.urlVersion = urlVersion;
         this.actualVersion = actualVersion;
     }
@@ -24,7 +27,6 @@ public class NewClientNotification implements Notification {
         return "A new version of the client is available";
     }
 
-    // TODO
     @Override
     public boolean hasNotification() {
         try {
@@ -35,14 +37,20 @@ public class NewClientNotification implements Notification {
             String latestVersion = con.getURL().toString().split("/tag/")[1];
             return !latestVersion.equals(this.actualVersion);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return false;
     }
 
     @Override
     public EventHandler getEvent() {
-        return event -> this.h.showDocument(this.urlVersion);
+        return event -> new Thread(() -> {
+            try {
+                Desktop.getDesktop().browse(new URI(this.urlVersion));
+            } catch (IOException | URISyntaxException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            }
+        }).start();
     }
 
     @Override

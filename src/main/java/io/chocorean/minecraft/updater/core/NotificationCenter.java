@@ -19,7 +19,7 @@ public class NotificationCenter {
     }
 
     public List<Notification> collectNotifications() {
-        return this.notificationSources.stream().filter(n -> n.hasNotification())
+        return this.notificationSources.stream().filter(Notification::hasNotification)
                 .sorted((o1, o2) -> o1.getPriority() > o2.getPriority() ? 1 : -1).collect(Collectors.toList());
     }
 

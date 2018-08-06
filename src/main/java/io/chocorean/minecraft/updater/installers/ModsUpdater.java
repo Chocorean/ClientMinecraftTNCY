@@ -77,6 +77,8 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
                     rbc = Channels.newChannel(my.openStream());
                     FileOutputStream fos = new FileOutputStream(absolutefilePathMod);
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    fos.close();
+                    rbc.close();
                     progress.setProgress(progress.getProgress() + increment);
                 } catch (IOException e) {
                     LOGGER.log(Level.SEVERE, "", e);

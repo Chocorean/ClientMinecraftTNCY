@@ -4,7 +4,12 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Locale;
 
-public class Utils {
+public class MinecraftUtils {
+
+    private MinecraftUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
 
     public static File getDefaultMinecraftDirectory() {
         String minecraftDir = ".minecraft";

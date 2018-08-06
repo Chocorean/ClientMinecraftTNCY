@@ -1,8 +1,7 @@
 package io.chocorean.minecraft.updater.controllers;
 
 import io.chocorean.minecraft.updater.Configuration;
-import io.chocorean.minecraft.updater.Main;
-import io.chocorean.minecraft.updater.Utils;
+import io.chocorean.minecraft.updater.MinecraftUtils;
 import io.chocorean.minecraft.updater.core.NotificationCenter;
 import io.chocorean.minecraft.updater.core.notifications.NewClientNotification;
 import io.chocorean.minecraft.updater.core.notifications.NewModsNotification;
@@ -35,8 +34,8 @@ public class NotificationController {
         this.displayed = false;
         this.config = Configuration.getInstance();
         this.notificationCenter = new NotificationCenter();
-        this.notificationCenter.register(new NewClientNotification(Main.hostService, config.getVersionUrl(), config.getVersion()));
-        this.notificationCenter.register(new NewModsNotification(Utils.getDefaultModsDirectory().getAbsolutePath()));
+        this.notificationCenter.register(new NewClientNotification(config.getVersionUrl(), config.getVersion()));
+        this.notificationCenter.register(new NewModsNotification(MinecraftUtils.getDefaultModsDirectory().getAbsolutePath()));
     }
 
     @FXML

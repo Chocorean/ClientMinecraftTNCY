@@ -1,7 +1,7 @@
 package io.chocorean.minecraft.updater.controllers;
 
 import io.chocorean.minecraft.updater.Configuration;
-import io.chocorean.minecraft.updater.Utils;
+import io.chocorean.minecraft.updater.MinecraftUtils;
 import io.chocorean.minecraft.updater.core.Libraries;
 import io.chocorean.minecraft.updater.core.Library;
 import io.chocorean.minecraft.updater.core.Version;
@@ -54,7 +54,7 @@ public class BottomController {
     private final Configuration conf = Configuration.getInstance();
 
     public BottomController() {
-        this.minecraftPath = Utils.getDefaultMinecraftDirectory();
+        this.minecraftPath = MinecraftUtils.getDefaultMinecraftDirectory();
     }
 
     @FXML
