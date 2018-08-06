@@ -18,7 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -73,7 +72,7 @@ public class NotificationController {
     }
 
     private void displayNotifications(List<Notification> notifs) {
-        if(notifs.size() > 0)
+        if(!notifs.isEmpty())
             this.displayNotification(notifs.get(0));
     }
 

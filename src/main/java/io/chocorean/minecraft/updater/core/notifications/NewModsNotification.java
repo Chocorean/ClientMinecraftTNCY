@@ -29,7 +29,7 @@ public class NewModsNotification implements Notification {
     public String getMessage() {
         if(this.uninstalled.size() == 1)
             return this.uninstalled.get(0) + " must be installed";
-        return this.uninstalled.size() == 0 ? "Your setup is up-to-date" :
+        return this.uninstalled.isEmpty() ? "Your setup is up-to-date" :
             String.format("%d mods must be installed", this.uninstalled.size());
     }
 
@@ -38,7 +38,7 @@ public class NewModsNotification implements Notification {
         try {
             List<String> mods = this.getLatestMods();
             this.uninstalled = mods.stream().filter(m -> !Paths.get(modsPath, m).toFile().exists()).collect(Collectors.toList());
-            return uninstalled.size() != 0;
+            return !uninstalled.isEmpty();
         } catch (IOException e) { LOGGER.log(Level.SEVERE, "", e); }
         return false;
     }
@@ -57,13 +57,14 @@ public class NewModsNotification implements Notification {
         URL modsURL = Configuration.getInstance().getModsUrl();
         File modsFilename = Paths.get(System.getProperty("java.io.tmpdir"), new File(modsURL.toString()).getName()).toFile();
         ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
-        FileOutputStream mod_fos = new FileOutputStream(modsFilename);
-        mod_fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        FileOutputStream modFos = new FileOutputStream(modsFilename);
+        modFos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         BufferedReader br = new BufferedReader(new FileReader(modsFilename));
         String line;
         List<String> mods = new ArrayList<>();
         while ((line = br.readLine()) != null)
             mods.add(new File(line).getName().trim());
+        br.close();
         return mods;
     }
 

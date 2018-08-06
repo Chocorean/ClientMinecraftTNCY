@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Configuration of the app.
@@ -16,6 +18,7 @@ import java.util.Properties;
  */
 public class Configuration {
 
+    private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
     private static final String UPDATER_CONFIG_FILE = "/updater.properties";
     private static Configuration config;
     private final Map<String, String> properties;
@@ -29,7 +32,7 @@ public class Configuration {
         try {
             return new URL(this.properties.get("root") + "/" +  this.properties.get("changelog"));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return null;
     }
@@ -38,7 +41,7 @@ public class Configuration {
         try {
             return new URL(this.properties.get("root") + "/mods.txt");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return null;
     }
@@ -47,7 +50,7 @@ public class Configuration {
         try {
             return new URL(this.properties.get("root") + "/" + properties.get("styles"));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return null;
     }
@@ -104,7 +107,7 @@ public class Configuration {
         try {
             return new URL(this.properties.get("forge"));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         return null;
     }
