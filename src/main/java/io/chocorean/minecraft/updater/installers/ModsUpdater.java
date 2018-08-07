@@ -41,16 +41,15 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
         this.progressBar.setProgress(0);
         ExecutorService service = Executors.newFixedThreadPool(NB_THREADS);
         List<Callable<File>> tasks = new ArrayList<>();
-        try {
-            Configuration config = Configuration.getInstance();
-            URL modsURL = config.getModsUrl();
-            File modsFilename = Paths.get(System.getProperty("java.io.tmpdir"), new File(modsURL.toString()).getName()).toFile();
-
-            ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
-            FileOutputStream mod_fos = new FileOutputStream(modsFilename);
+        Configuration config = Configuration.getInstance();
+        URL modsURL = config.getModsUrl();
+        File modsFilename = Paths.get(System.getProperty("java.io.tmpdir"), new File(modsURL.toString()).getName()).toFile();
+        try(
+                ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
+                FileOutputStream mod_fos = new FileOutputStream(modsFilename);
+                BufferedReader br = new BufferedReader(new FileReader(modsFilename))
+        ) {
             mod_fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-
-            BufferedReader br = new BufferedReader(new FileReader(modsFilename));
             String line;
             List<URL> urls = new ArrayList<>();
             while ((line = br.readLine()) != null)

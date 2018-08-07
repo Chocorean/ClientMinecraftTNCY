@@ -24,14 +24,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -50,10 +46,13 @@ public class BottomController {
     @FXML private Button installModsButton;
     private File minecraftPath;
     private Stage dialog;
+    private final ScheduledExecutorService exec;
     private static final Logger LOGGER = Logger.getLogger(BottomController.class.getName());
     private final Configuration conf = Configuration.getInstance();
+    private ScheduledFuture futur;
 
     public BottomController() {
+        this.exec = Executors.newSingleThreadScheduledExecutor();
         this.minecraftPath = MinecraftUtils.getDefaultMinecraftDirectory();
     }
 
@@ -100,20 +99,23 @@ public class BottomController {
 
     private void setOnSaveRealeased() {
         this.saveButton.setOnMouseReleased(event -> new Thread(() -> {
-            File versionFolder = this.getVersionFile();
+            File versionFolder = this.getVersionFile().getParentFile();
             if (!versionFolder.exists())
                 versionFolder.mkdirs();
             List<Library> libraries = Libraries.getLibrariesFromResource();
             Version profile = new Version(conf.getProfile(), this.username.getText(), conf.getForgeVersion(), libraries);
-            BufferedWriter writer;
-            try {
-                writer = new BufferedWriter(new FileWriter(this.getVersionFile()));
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(this.getVersionFile()))) {
                 writer.write(profile.toString());
                 Platform.runLater(() -> setMessage("Configuration has been saved"));
-                writer.close();
-            } catch (IOException e) {
+            }
+            catch(FileNotFoundException e) {
+                this.setMessage("It seems like the directory is not correct. Please specify the minecraft game directory!");
                 LOGGER.log(Level.SEVERE, "", e);
             }
+             catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "", e);
+            }
+
         }).start());
     }
 
@@ -187,7 +189,10 @@ public class BottomController {
     }
 
     private void setMessage(String msg) {
-        this.message.setText(msg);
+        if(this.futur != null)
+            this.futur.cancel(true);
+        this.futur = exec.schedule(() -> Platform.runLater(() -> message.setText("")), 6, TimeUnit.SECONDS);
+        Platform.runLater(() -> message.setText(msg));
     }
 
     private File getMinecraftDirectory() {

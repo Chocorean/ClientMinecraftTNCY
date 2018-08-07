@@ -3,6 +3,7 @@ package io.chocorean.minecraft.updater.controllers;
 import io.chocorean.minecraft.updater.Configuration;
 import io.chocorean.minecraft.updater.MinecraftUtils;
 import io.chocorean.minecraft.updater.core.NotificationCenter;
+import io.chocorean.minecraft.updater.core.notifications.MinecraftNotFoundNotification;
 import io.chocorean.minecraft.updater.core.notifications.NewClientNotification;
 import io.chocorean.minecraft.updater.core.notifications.NewModsNotification;
 import io.chocorean.minecraft.updater.core.notifications.Notification;
@@ -48,30 +49,33 @@ public class NotificationController {
             if(this.displayed) {
                 TranslateTransition slideOut = new TranslateTransition(Duration.millis(333), this.notificationMenu);
                 slideOut.setInterpolator(Interpolator.EASE_IN);
-                slideOut.setByY(notificationMenu.getPrefHeight() + 10);
+                slideOut.setByY(notificationMenu.getPrefHeight() + 20);
                 slideOut.play();
                 this.displayed = false;
             }
         });
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        // Need to improve this, little freeze is visible at the startup of the app
         service.schedule(() -> Platform.runLater(() -> displayNotifications(notificationCenter.collectNotifications())), 3, TimeUnit.SECONDS);
         this.notificationMessage.setVisited(false);
     }
 
     private void displayNotification(Notification n) {
-        this.notificationMessage.setText(n.getMessage());
-        this.notificationMessage.setOnMouseClicked(n.getEvent());
-        if(!this.displayed) {
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(1000), notificationMenu);
-            slideIn.setInterpolator(Interpolator.EASE_BOTH);
-            slideIn.setByY(-(notificationMenu.getPrefHeight() + 20));
-            slideIn.play();
-            displayed = true;
-        }
+        Platform.runLater(() -> {
+            if(!displayed) {
+                displayed = true;
+                notificationMessage.setText(n.getMessage());
+                notificationMessage.setOnMouseClicked(n.getEvent());
+                TranslateTransition slideIn = new TranslateTransition(Duration.millis(1000), notificationMenu);
+                slideIn.setInterpolator(Interpolator.EASE_BOTH);
+                slideIn.setByY(-(notificationMenu.getPrefHeight() + 20));
+                slideIn.play();
+            }
+        });
     }
 
     private void displayNotifications(List<Notification> notifs) {
-        if(!notifs.isEmpty())
+        if(!notifs.isEmpty() && !this.displayed)
             this.displayNotification(notifs.get(0));
     }
 

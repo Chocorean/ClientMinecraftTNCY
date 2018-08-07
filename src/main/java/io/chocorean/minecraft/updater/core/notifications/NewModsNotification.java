@@ -56,17 +56,17 @@ public class NewModsNotification implements Notification {
     private List<String> getLatestMods() throws IOException {
         URL modsURL = Configuration.getInstance().getModsUrl();
         File modsFilename = Paths.get(System.getProperty("java.io.tmpdir"), new File(modsURL.toString()).getName()).toFile();
-        ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
-        try (FileOutputStream modFos = new FileOutputStream(modsFilename)) {
+        try (FileOutputStream modFos = new FileOutputStream(modsFilename);
+             ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
+             BufferedReader br = new BufferedReader(new FileReader(modsFilename))
+        ) {
             modFos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            try (BufferedReader br = new BufferedReader(new FileReader(modsFilename))) {
-                String line;
-                List<String> mods = new ArrayList<>();
-                while ((line = br.readLine()) != null)
-                    mods.add(new File(line).getName().trim());
-                br.close();
-                return mods;
-            }
+            String line;
+            List<String> mods = new ArrayList<>();
+            while ((line = br.readLine()) != null)
+                mods.add(new File(line).getName().trim());
+            br.close();
+            return mods;
         }
     }
 
