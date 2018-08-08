@@ -8,6 +8,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 /**
@@ -54,8 +56,13 @@ public class DeleteModsController {
     }
 
     private void deleteUnusedMods() {
-        for(File m: this.unusedMods)
-            m.delete();
+        try {
+            for (File m : this.unusedMods) {
+                Files.delete(m.toPath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.appController.closeDialog();
     }
 

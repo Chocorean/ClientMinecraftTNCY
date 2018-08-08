@@ -3,7 +3,6 @@ package io.chocorean.minecraft.updater.controllers;
 import io.chocorean.minecraft.updater.Configuration;
 import io.chocorean.minecraft.updater.MinecraftUtils;
 import io.chocorean.minecraft.updater.core.NotificationCenter;
-import io.chocorean.minecraft.updater.core.notifications.MinecraftNotFoundNotification;
 import io.chocorean.minecraft.updater.core.notifications.NewClientNotification;
 import io.chocorean.minecraft.updater.core.notifications.NewModsNotification;
 import io.chocorean.minecraft.updater.core.notifications.Notification;

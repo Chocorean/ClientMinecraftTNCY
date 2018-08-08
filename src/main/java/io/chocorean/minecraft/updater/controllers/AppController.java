@@ -9,6 +9,8 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Controller of the main view
@@ -17,11 +19,11 @@ import java.net.URLConnection;
  */
 public class AppController {
 
+    private static final Logger LOGGER = Logger.getLogger(AppController.class.getName());
     @FXML private AnchorPane rootPane;
 
     @FXML
     private void initialize() {
-
         if(!AppController.checkNetwork())
             this.showNoInternet();
     }
@@ -45,7 +47,7 @@ public class AppController {
                 pane.setCenter(changelog);
                 pane.getBottom().setDisable(false);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "", e);
             }
         }
 
@@ -58,7 +60,7 @@ public class AppController {
             pane.setCenter(character);
             pane.getBottom().setDisable(true);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 

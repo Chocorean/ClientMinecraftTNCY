@@ -65,7 +65,6 @@ public class NewModsNotification implements Notification {
             List<String> mods = new ArrayList<>();
             while ((line = br.readLine()) != null)
                 mods.add(new File(line).getName().trim());
-            br.close();
             return mods;
         }
     }

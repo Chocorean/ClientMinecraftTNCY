@@ -77,7 +77,9 @@ public class Configuration {
             properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
             properties.put("githubUrl", prop.getProperty("GITHUB_URL"));
             return new Configuration(properties);
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
         return null;
     }
 

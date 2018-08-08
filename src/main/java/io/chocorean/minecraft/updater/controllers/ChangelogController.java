@@ -6,10 +6,13 @@ import javafx.scene.web.WebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Controller of the changelog webview
@@ -18,21 +21,22 @@ import java.nio.file.Paths;
  */
 public class ChangelogController {
 
+    private static final Logger LOGGER = Logger.getLogger(ChangelogController.class.getName());
     @FXML private WebView changelog;
 
     @FXML
     private void initialize() {
         Configuration conf = Configuration.getInstance();
         try {
-            File changelog = this.download(conf.getChangelogUrl());
+            File changelogFile = this.download(conf.getChangelogUrl());
             this.download(conf.getStylesUrl());
-            this.changelog.getEngine().load(changelog.toURI().toURL().toString());
+            this.changelog.getEngine().load(changelogFile.toURI().toURL().toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
-    private File download(URL url) throws Exception {
+    private File download(URL url) throws IOException {
         File file = Paths.get(System.getProperty("java.io.tmpdir"), new File(url.toString()).getName()).toFile();
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
         FileOutputStream fos = new FileOutputStream(file);
