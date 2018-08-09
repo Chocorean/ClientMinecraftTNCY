@@ -38,9 +38,12 @@ public class ChangelogController {
 
     private File download(URL url) throws IOException {
         File file = Paths.get(System.getProperty("java.io.tmpdir"), new File(url.toString()).getName()).toFile();
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        try(
+                ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+                FileOutputStream fos = new FileOutputStream(file)
+        ) {
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        }
         return file;
     }
 

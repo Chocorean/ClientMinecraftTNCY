@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Controller of the dialog view
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public class DeleteModsController {
 
+    private static final Logger LOGGER = Logger.getLogger(DeleteModsController.class.getName());
     private final List<File> unusedMods;
     @FXML private Label alert;
     @FXML private ScrollPane grid;
@@ -61,7 +64,7 @@ public class DeleteModsController {
                 Files.delete(m.toPath());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "", e);
         }
         this.appController.closeDialog();
     }
