@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Configuration of the app.
- * THe configuration file is available in /resources/updater.properties.
+ * The configuration file is available in /resources/updater.properties.
  *
  * @author mcdostone
  */
@@ -23,82 +23,24 @@ public class Configuration {
     private static Configuration config;
     private final Map<String, String> properties;
 
-
-    private Configuration(Map<String, String> properties) {
+    public Configuration(Map<String, String> properties) {
         this.properties = properties;
     }
 
     public URL getChangelogUrl() {
-        try {
-            return new URL(this.properties.get("root") + "/" +  this.properties.get("changelog"));
-        } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "", e);
-        }
-        return null;
+        return this.getURL(this.properties.get("root") + "/" +  this.properties.get("changelog"));
     }
 
     public URL getModsUrl() {
-        try {
-            return new URL(this.properties.get("root") + "/mods.txt");
-        } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "", e);
-        }
-        return null;
+        return this.getURL(this.properties.get("root") + "/mods.txt");
     }
 
     public URL getStylesUrl() {
-        try {
-            return new URL(this.properties.get("root") + "/" + properties.get("styles"));
-        } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "", e);
-        }
-        return null;
+        return this.getURL(this.properties.get("root") + "/" + properties.get("styles"));
     }
 
     public String getProfile() {
         return this.properties.get("profile");
-    }
-
-    private static Configuration loadFromFileProperties() {
-        Properties prop = new Properties();
-        InputStream input;
-        try {
-            input = Configuration.class.getResourceAsStream(UPDATER_CONFIG_FILE);
-            prop.load(input);
-            Map<String, String> properties = new HashMap<>();
-            properties.put("root", prop.getProperty("ROOT_URL"));
-            properties.put("changelog", prop.getProperty("CHANGELOG_FILE"));
-            properties.put("mods", prop.getProperty("MODS_FILE"));
-            properties.put("styles", prop.getProperty("CSS_FILE"));
-            properties.put("version", prop.getProperty("VERSION"));
-            properties.put("forge", prop.getProperty("FORGE_URL"));
-            properties.put("profile", prop.getProperty("PROFILE"));
-            properties.put("versionUrl", prop.getProperty("VERSION_URL"));
-            properties.put("forgeVersion", prop.getProperty("FORGE_VERSION"));
-            properties.put("githubUrl", prop.getProperty("GITHUB_URL"));
-            return new Configuration(properties);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "", e);
-        }
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return "Configuration{" +
-                "mods='" + this.getModsUrl() + '\'' +
-                ", changelog='" + this.getChangelogUrl() + '\'' +
-                ", styles='" + this.getForgeUrl() + '\'' +
-                ", version='" + this.getVersion() + '\'' +
-                ", profile='" + this.getProfile() + '\'' +
-                ", github='" + this.getGithubUrl() + '\'' +
-                '}';
-    }
-
-    public static Configuration getInstance() {
-        if(Configuration.config == null)
-            Configuration.config = loadFromFileProperties();
-        return Configuration.config;
     }
 
     public String getVersion() {
@@ -106,12 +48,7 @@ public class Configuration {
     }
 
     public URL getForgeUrl() {
-        try {
-            return new URL(this.properties.get("forge"));
-        } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "", e);
-        }
-        return null;
+        return this.getURL(this.properties.get("forge"));
     }
 
     public String getForgeVersion() {
@@ -125,4 +62,51 @@ public class Configuration {
     public String getVersionUrl() {
         return this.properties.get("versionUrl");
     }
+
+    private URL getURL(String url) {
+        try {
+            return new URL(url);
+        } catch (MalformedURLException e) { LOGGER.log(Level.SEVERE, "", e); }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        String s = "Configuration {";
+        for(Map.Entry<String, String> entry: this.properties.entrySet()) {
+            s = String.format("%s\n\t%s = '%s',", s, entry.getKey(), entry.getValue());
+        }
+        return s + "\n}";
+    }
+
+    private static Configuration loadFromProperties(Properties props) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("root", props.getProperty("ROOT_URL"));
+        properties.put("changelog", props.getProperty("CHANGELOG_FILE"));
+        properties.put("mods", props.getProperty("MODS_FILE"));
+        properties.put("styles", props.getProperty("CSS_FILE"));
+        properties.put("version", props.getProperty("VERSION"));
+        properties.put("forge", props.getProperty("FORGE_URL"));
+        properties.put("profile", props.getProperty("PROFILE"));
+        properties.put("versionUrl", props.getProperty("VERSION_URL"));
+        properties.put("forgeVersion", props.getProperty("FORGE_VERSION"));
+        properties.put("githubUrl", props.getProperty("GITHUB_URL"));
+        return new Configuration(properties);
+    }
+
+    public static Configuration getInstance() {
+        return Configuration.getInstance(Configuration.class.getResourceAsStream(UPDATER_CONFIG_FILE));
+    }
+
+    public static Configuration getInstance(InputStream input) {
+        if (Configuration.config == null) {
+            try {
+                Properties props = new Properties();
+                props.load(input);
+                Configuration.config = loadFromProperties(props);
+            } catch (IOException e) { LOGGER.log(Level.SEVERE, "", e); }
+        }
+        return Configuration.config;
+    }
+
 }

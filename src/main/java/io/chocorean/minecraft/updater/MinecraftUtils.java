@@ -10,7 +10,6 @@ public class MinecraftUtils {
         throw new IllegalStateException("Utility class");
     }
 
-
     public static File getDefaultMinecraftDirectory() {
         String minecraftDir = ".minecraft";
         String userHomeDir = System.getProperty("user.home", ".");
