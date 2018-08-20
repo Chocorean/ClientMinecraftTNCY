@@ -33,23 +33,21 @@ public class AppController {
             final URL url = new URL("http://www.github.com");
             final URLConnection conn = url.openConnection();
             conn.connect();
-        } catch (Exception e) {
-            return false;
-        }
+        } catch (Exception e) { return false; }
         return true;
     }
 
     public void showChangelog() {
-            FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/changelog.fxml"));
-            try {
-                AnchorPane changelog = loader.load();
-                BorderPane pane = (BorderPane) this.rootPane.getChildren().get(0);
-                pane.setCenter(changelog);
-                pane.getBottom().setDisable(false);
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "", e);
-            }
+        FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/changelog.fxml"));
+        try {
+            AnchorPane changelog = loader.load();
+            BorderPane pane = (BorderPane) this.rootPane.getChildren().get(0);
+            pane.setCenter(changelog);
+            pane.getBottom().setDisable(false);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "", e);
         }
+    }
 
     private void showNoInternet() {
         FXMLLoader loader = new FXMLLoader(AppController.class.getResource("/fxml/no-internet.fxml"));
