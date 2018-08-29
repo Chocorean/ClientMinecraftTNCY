@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="bottomPane" maxHeight="270.0" minHeight="270.0" minWidth="700.0" prefHeight="270.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.minecraft.updater.controllers.BottomController">
+<AnchorPane fx:id="bottomPane" maxHeight="270.0" minHeight="270.0" minWidth="700.0" prefHeight="270.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.chocorean.minecraft.updater.controllers.BottomController">
     <BorderPane styleClass="minecraft" stylesheets="@../styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <bottom>
             <BorderPane maxHeight="60.0" minHeight="60.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="60.0" prefWidth="714.0">
@@ -58,7 +58,7 @@
                             <Font size="16.0" />
                         </font>
                     </Label>
-                    <TextField fx:id="username" minWidth="240.0" text="Player" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField id="username" fx:id="username" minWidth="240.0" text="Player" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Label text="Répertoire du jeu" textFill="WHITE">
                         <font>
                             <Font size="16.0" />
@@ -82,14 +82,14 @@
                         <GridPane.margin>
                             <Insets top="16.0" />
                         </GridPane.margin>
-                        <Button fx:id="saveButton" defaultButton="true" minWidth="120.0" mnemonicParsing="false" prefWidth="120.0" stylesheets="@../styles.css" text="Save" textFill="WHITE" HBox.hgrow="NEVER">
+                        <Button id="saveButton" fx:id="saveButton" defaultButton="true" minWidth="120.0" mnemonicParsing="false" prefWidth="120.0" stylesheets="@../styles.css" text="Save" textFill="WHITE" HBox.hgrow="NEVER">
                             <styleClass>
                                 <String fx:value="minecraft-button" />
                                 <String fx:value="save-button" />
                             </styleClass>
                         </Button>
-                        <Button fx:id="installForgeButton" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" prefWidth="200.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install forge" textFill="WHITE" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="installModsButton" maxWidth="1.7976931348623157E308" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install mods" textFill="WHITE">
+                        <Button id="installForgeButton" fx:id="installForgeButton" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" prefWidth="200.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install forge" textFill="WHITE" HBox.hgrow="ALWAYS" />
+                        <Button id="installModsButton" fx:id="installModsButton" maxWidth="1.7976931348623157E308" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" styleClass="minecraft-button" stylesheets="@../styles.css" text="Install mods" textFill="WHITE">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>

@@ -46,10 +46,10 @@ public class ModsUpdater implements Installer<List<Future<File>>> {
         File modsFilename = Paths.get(System.getProperty("java.io.tmpdir"), new File(modsURL.toString()).getName()).toFile();
         try(
                 ReadableByteChannel rbc = Channels.newChannel(modsURL.openStream());
-                FileOutputStream mod_fos = new FileOutputStream(modsFilename);
+                FileOutputStream modFos = new FileOutputStream(modsFilename);
                 BufferedReader br = new BufferedReader(new FileReader(modsFilename))
         ) {
-            mod_fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            modFos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             String line;
             List<URL> urls = new ArrayList<>();
             while ((line = br.readLine()) != null)

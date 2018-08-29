@@ -31,6 +31,7 @@ public class ForgeInstaller implements Installer<Future<?>> {
     private final ProgressBar progressBar;
     private final ExecutorService service;
     private final Runnable cb;
+    private static Process process;
 
     public ForgeInstaller(URL forgeURL, ProgressBar progressBar, Runnable cb) {
         this.url = forgeURL;
@@ -53,11 +54,13 @@ public class ForgeInstaller implements Installer<Future<?>> {
                 FileOutputStream fos = new FileOutputStream(forgeFile);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                 this.progressBar.setProgress(1);
-                Process p = Runtime.getRuntime().exec("java -jar " + forgeFile);
-                p.waitFor();
-                if(p.exitValue() == 0)
+                ForgeInstaller.process = Runtime.getRuntime().exec("java -jar " + forgeFile);
+                ForgeInstaller.process.waitFor();
+                if(ForgeInstaller.process.exitValue() == 0) {
                     Platform.runLater(this.cb);
-                return p.exitValue();
+                    ForgeInstaller.process = null;
+                }
+                return ForgeInstaller.process.exitValue();
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, "", e);
             } catch (InterruptedException e) {
@@ -80,6 +83,11 @@ public class ForgeInstaller implements Installer<Future<?>> {
             contentLength = connection.getContentLength();
         } catch (Exception e) { LOGGER.log(Level.SEVERE, "", e); }
         return contentLength;
+    }
+
+    public static void destroy() {
+        if(ForgeInstaller.process != null)
+            process.destroy();
     }
 
 }

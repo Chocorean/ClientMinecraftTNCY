@@ -1,6 +1,7 @@
 package io.chocorean.minecraft.updater;
 
 
+import io.chocorean.minecraft.updater.installers.ForgeInstaller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ public class Main extends Application {
         primaryStage.setMinHeight(root.minHeight(-1));
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
+            ForgeInstaller.destroy();
             Platform.exit();
             System.exit(0);
         });
