@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
-import static org.junit.Assert.*;
-
 public class MainTest extends ApplicationTest {
 
     @Override
@@ -33,6 +31,7 @@ public class MainTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+        closeCurrentWindow();
     }
 
     @Test
