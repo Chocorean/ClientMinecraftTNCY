@@ -22,10 +22,6 @@ public class MainTest extends ApplicationTest {
         stage.toFront();
     }
 
-    @Before
-    public void setUp () throws Exception {
-    }
-
     @After
     public void tearDown () throws Exception {
         FxToolkit.hideStage();
@@ -37,15 +33,15 @@ public class MainTest extends ApplicationTest {
     @Test
     public void testButtons () {
         clickOn("#saveButton");
-        clickOn("#installForgeButton");
-        clickOn("#installModsButton");
+        //clickOn("#installForgeButton");
+        //clickOn("#installModsButton");
     }
 
-    @Test
+    /*@Test
     public void testChangeUsername () {
         clickOn("#username");
         write("tarba des bois");
         clickOn("#saveButton");
     }
-
+*/
 }
