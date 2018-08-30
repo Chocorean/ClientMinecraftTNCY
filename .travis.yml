@@ -47,9 +47,6 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.sonar/cache'
 
-script:
-  - ./gradlew check
-
 cache:
   directories:
     - $HOME/.gradle/caches/
